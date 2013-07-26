@@ -19,6 +19,6 @@ buster.testCase("ProjectModel", {
 
   "getName": function() {
     this.project.setName("foo");
-    assert.equals("foo", this.project.getName());
+    assert.equals(this.project.getName(), "foo");
   },
 });

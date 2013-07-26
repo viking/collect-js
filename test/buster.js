@@ -7,7 +7,10 @@ config["tests"] = {
     "lib/maria.js",
     "src/js/namespace.js",
     "src/js/util.js",
-    "src/js/models/project.js"
+    "src/js/models/*.js",
+    "src/js/templates/*.js",
+    "src/js/views/*.js",
+    //"src/js/controllers/*.js",
   ],
   tests: [
     "test/js/**/test_*.js"
