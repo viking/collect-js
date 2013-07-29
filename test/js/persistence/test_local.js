@@ -45,4 +45,20 @@ buster.testCase('LocalStore', {
     assert(err);
     assert.equals(err, "object option is required");
   },
+
+  "getCollection": function(done) {
+    var obj = {
+      attributes: function() { return({foo: "bar"}); }
+    };
+    var self = this;
+    this.store.create({
+      collection: 'stuff',
+      object: obj,
+      success: function(id) {
+        self.store.getCollection('stuff', done(function(data) {
+          assert.equals(data, [{id:1,foo:"bar"}])
+        }))
+      }
+    });
+  },
 });

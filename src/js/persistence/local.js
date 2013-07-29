@@ -2,6 +2,13 @@ Collect.LocalStore = function(options) {
   this.options = options;
 }
 
+Collect.LocalStore.prototype.getCollection = function(name, callback) {
+  var self = this;
+  setTimeout(function() {
+    callback(self._getCollection(name));
+  }, 0);
+};
+
 Collect.LocalStore.prototype.create = function(options) {
   if (typeof(options.collection) == 'undefined') {
     throw("collection option is required");
