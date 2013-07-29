@@ -4,6 +4,17 @@ buster.testCase("ProjectModel", {
     this.observer = {triggered: false, trigger: function() { this.triggered = true }};
   },
 
+  "setId triggers 'change'": function() {
+    maria.on(this.project, "change", this.observer, "trigger");
+    this.project.setId(1);
+    assert(this.observer.triggered);
+  },
+
+  "getId": function() {
+    this.project.setId(1);
+    assert.equals(this.project.getId(), 1);
+  },
+
   "setName triggers 'change'": function() {
     maria.on(this.project, "change", this.observer, "trigger");
     this.project.setName("foo");
@@ -21,4 +32,10 @@ buster.testCase("ProjectModel", {
     this.project.setName("foo");
     assert.equals(this.project.getName(), "foo");
   },
+
+  "attributes": function() {
+    this.project.setId(1);
+    this.project.setName("foo");
+    assert.equals(this.project.attributes(), {id: 1, name: "foo"})
+  }
 });
