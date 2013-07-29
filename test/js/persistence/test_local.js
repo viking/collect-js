@@ -46,6 +46,20 @@ buster.testCase('LocalStore', {
     assert.equals(err, "object option is required");
   },
 
+  "create with existing id": function(done) {
+    var obj = {
+      attributes: function() { return({id: 1, foo: "bar"}); }
+    };
+
+    this.store.create({
+      collection: 'stuff',
+      object: obj,
+      failure: done(function(message) {
+        assert.equals(message, "record id is non-null");
+      })
+    });
+  },
+
   "getCollection": function(done) {
     var obj = {
       attributes: function() { return({foo: "bar"}); }
@@ -117,7 +131,7 @@ buster.testCase('LocalStore', {
     assert.equals(err, "object option is required");
   },
 
-  "update with bad record": function(done) {
+  "update with bad record id": function(done) {
     var obj = {
       attributes: function() { return({id: 1, foo: "bar"}); }
     };

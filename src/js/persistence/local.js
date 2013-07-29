@@ -40,12 +40,18 @@ Collect.LocalStore.prototype.update = function(options) {
 };
 
 Collect.LocalStore.prototype._create = function(options) {
+  var obj = options.object;
+  var attributes = obj.attributes();
+  if (attributes.id) {
+    if (options.failure) {
+      options.failure("record id is non-null");
+      return;
+    }
+  }
+
   var collectionName = options.collection;
   var collection = this._getCollection(collectionName);
   var nextId = collection.length + 1;
-
-  var obj = options.object;
-  var attributes = obj.attributes();
 
   var record = {};
   var name;
