@@ -24,6 +24,21 @@ Collect.LocalStore.prototype.create = function(options) {
   }, 0);
 };
 
+Collect.LocalStore.prototype.update = function(options) {
+  if (typeof(options.collection) == 'undefined') {
+    throw("collection option is required");
+  }
+
+  if (typeof(options.object) == 'undefined') {
+    throw("object option is required");
+  }
+
+  var self = this;
+  setTimeout(function() {
+    self._update.call(self, options);
+  }, 0);
+};
+
 Collect.LocalStore.prototype._create = function(options) {
   var collectionName = options.collection;
   var collection = this._getCollection(collectionName);
@@ -32,17 +47,50 @@ Collect.LocalStore.prototype._create = function(options) {
   var obj = options.object;
   var attributes = obj.attributes();
 
-  var data = {};
+  var record = {};
   var name;
   for (name in attributes) {
-    data[name] = attributes[name];
+    record[name] = attributes[name];
   }
-  data['id'] = nextId;
-  collection.push(data);
+  record['id'] = nextId;
+  collection.push(record);
   this._setCollection(collectionName, collection);
 
   if (options.success) {
     options.success(nextId);
+  }
+};
+
+Collect.LocalStore.prototype._update = function(options) {
+  var collectionName = options.collection;
+  var collection = this._getCollection(collectionName);
+
+  var obj = options.object;
+  var attributes = obj.attributes();
+
+  /* find existing record */
+  var record;
+  for (var i = 0; i < collection.length; i++) {
+    if (collection[i].id == attributes.id) {
+      record = collection[i];
+      break;
+    }
+  }
+  if (!record) {
+    if (options.failure) {
+      options.failure("record not found");
+      return;
+    }
+  }
+
+  var name;
+  for (name in attributes) {
+    record[name] = attributes[name];
+  }
+  this._setCollection(collectionName, collection);
+
+  if (options.success) {
+    options.success();
   }
 };
 

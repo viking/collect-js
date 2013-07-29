@@ -61,4 +61,73 @@ buster.testCase('LocalStore', {
       }
     });
   },
+
+  "update": function(done) {
+    var obj = {
+      data: {foo: "bar"},
+      attributes: function() { return(this.data); }
+    };
+
+    var self = this;
+    this.store.create({
+      collection: 'stuff',
+      object: obj,
+      success: function(id) {
+        obj.data.id = id;
+
+        obj.data.foo = "baz";
+        self.store.update({
+          collection: 'stuff',
+          object: obj,
+          success: done(function() {
+            assert.equals(
+              JSON.parse(localStorage['stuff']),
+              [{id:1,foo:"baz"}]
+            );
+          })
+        });
+      }
+    });
+  },
+
+  "update requires collection option": function() {
+    var err;
+    var obj = {
+      attributes: function() { return({id: 1, foo: "bar"}); }
+    };
+    try {
+      this.store.update({object: obj});
+    }
+    catch(thrown) {
+      err = thrown;
+    }
+    assert(err);
+    assert.equals(err, "collection option is required");
+  },
+
+  "update requires object option": function() {
+    var err;
+    try {
+      this.store.update({collection: 'foo'});
+    }
+    catch(thrown) {
+      err = thrown;
+    }
+    assert(err);
+    assert.equals(err, "object option is required");
+  },
+
+  "update with bad record": function(done) {
+    var obj = {
+      attributes: function() { return({id: 1, foo: "bar"}); }
+    };
+
+    this.store.update({
+      collection: 'stuff',
+      object: obj,
+      failure: done(function(message) {
+        assert.equals(message, "record not found");
+      })
+    });
+  },
 });
