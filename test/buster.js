@@ -5,6 +5,8 @@ config["tests"] = {
   environment: "browser",
   sources: [
     "lib/maria.js",
+    "lib/jquery.js",
+    "lib/jquery-ui.js",
     "src/js/namespace.js",
     "src/js/util.js",
     "src/js/persistence/*.js",
