@@ -124,6 +124,12 @@ namespace :phantomjs do
   task :restart => ['buster:stop', :start]
 end
 
+desc "Kill all node processes and remove PID files"
+task :killall do
+  system('killall node')
+  FileUtils.rm(Dir.glob('tmp/pids/*.pid'), :verbose => true)
+end
+
 namespace :templates do
   desc "Build templates"
   task :build do
@@ -131,6 +137,16 @@ namespace :templates do
       sub!(%r{(templates/.+?)\.html$}, 'js/\1.js')
     templates.each do |template|
       Rake::Task[template].invoke
+    end
+  end
+
+  desc "Clean up non-existant templates"
+  task :clean do
+    valid = FileList["src/templates/*.html"].
+      sub!(%r{(templates/.+?)\.html$}, 'js/\1.js')
+    invalid = FileList["src/js/templates/*.js"] - valid
+    if !invalid.empty?
+      FileUtils.rm(invalid, :verbose => true)
     end
   end
 
