@@ -100,13 +100,29 @@ buster.testCase('LocalStore', {
     setModel.add(model);
   },
 
+  "stop reacting to set model changes": function(done) {
+    localStorage['projects'] = '[{"id":1,"name":"foo"}]';
+
+    var setModel = new Collect.ProjectsModel();
+    this.store.addSetModel('projects', setModel);
+    this.store.removeSetModel('projects', setModel);
+
+    var model = new Collect.ProjectModel();
+    model.setName('foo');
+    setModel.add(model);
+
+    setTimeout(function() {
+      assert.equals(localStorage['projects'], '[{"id":1,"name":"foo"}]');
+      done();
+    }, 100);
+  },
+
   "populate adds models to set model": function(done) {
     var setModel = new Collect.ProjectsModel();
     localStorage['projects'] = '[{"id":1,"name":"foo"}]';
     this.store.populate('projects', setModel, Collect.ProjectModel, {
       success: done(function() {
         assert.equals(setModel.size, 1);
-        assert.equals(localStorage['projects'], '[{"id":1,"name":"foo"}]');
       })
     });
   },
