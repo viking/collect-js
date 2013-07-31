@@ -87,4 +87,16 @@ buster.testCase('LocalStore', {
       })
     });
   },
+
+  "reacting to set model new records": function(done) {
+    var setModel = new Collect.ProjectsModel();
+    this.store.addSetModel('projects', setModel, {
+      success: done(function(id) {
+        assert.equals(JSON.parse(localStorage['projects']), [{id:1,name:"foo"}])
+      })
+    });
+    var model = new Collect.ProjectModel();
+    model.setName('foo');
+    setModel.add(model);
+  },
 });

@@ -1,5 +1,25 @@
+Collect.StoreSetModelProxy = function(store, collectionName, setModel, options) {
+  this._store = store;
+  this._collectionName = collectionName;
+  this._setModel = setModel;
+  this._options = options;
+}
+
+Collect.StoreSetModelProxy.prototype.handleEvent = function(evt) {
+  if (evt.type != "change") {
+    return;
+  }
+
+  if (evt.addedTargets) {
+    evt.addedTargets.map(function(model) {
+      this._store.create(this._collectionName, model, this._options);
+    }, this);
+  }
+}
+
 Collect.LocalStore = function(options) {
   this.options = options;
+  this.setModelProxies = [];
 }
 
 Collect.LocalStore.prototype.getCollection = function(name, callback) {
@@ -22,6 +42,11 @@ Collect.LocalStore.prototype.update = function(collectionName, object, options) 
     self._update.call(self, collectionName, object, options);
   }, 0);
 };
+
+Collect.LocalStore.prototype.addSetModel = function(collectionName, setModel, options) {
+  var proxy = new Collect.StoreSetModelProxy(this, collectionName, setModel, options);
+  maria.on(setModel, 'change', proxy);
+}
 
 Collect.LocalStore.prototype._create = function(collectionName, object, options) {
   var attributes = object.attributes();
