@@ -48,6 +48,13 @@ Collect.LocalStore.prototype.addSetModel = function(collectionName, setModel, op
   maria.on(setModel, 'change', proxy);
 }
 
+Collect.LocalStore.prototype.populate = function(collectionName, setModel, modelClass, options) {
+  var self = this;
+  setTimeout(function() {
+    self._populate.call(self, collectionName, setModel, modelClass, options);
+  }, 0);
+}
+
 Collect.LocalStore.prototype._create = function(collectionName, object, options) {
   var attributes = object.attributes();
   if (attributes.id) {
@@ -120,3 +127,19 @@ Collect.LocalStore.prototype._getCollection = function(name) {
 Collect.LocalStore.prototype._setCollection = function(name, collection) {
   localStorage[name] = JSON.stringify(collection);
 };
+
+Collect.LocalStore.prototype._populate = function(collectionName, setModel, modelClass, options) {
+  var collection = this._getCollection(collectionName);
+  var models = collection.map(function(record) {
+    var model = new modelClass();
+    for (key in record) {
+      var method = 'set' + key.charAt(0).toUpperCase() + key.slice(1);
+      model[method].call(model, record[key]);
+    }
+    return model;
+  });
+  setModel.add.apply(setModel, models);
+  if (options.success) {
+    options.success();
+  }
+}

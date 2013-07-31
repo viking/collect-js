@@ -99,4 +99,15 @@ buster.testCase('LocalStore', {
     model.setName('foo');
     setModel.add(model);
   },
+
+  "populate adds models to set model": function(done) {
+    var setModel = new Collect.ProjectsModel();
+    localStorage['projects'] = '[{"id":1,"name":"foo"}]';
+    this.store.populate('projects', setModel, Collect.ProjectModel, {
+      success: done(function() {
+        assert.equals(setModel.size, 1);
+        assert.equals(localStorage['projects'], '[{"id":1,"name":"foo"}]');
+      })
+    });
+  },
 });
