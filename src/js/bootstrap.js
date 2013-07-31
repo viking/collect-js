@@ -1,13 +1,11 @@
 maria.on(window, "load", function() {
   var setModel = new Collect.ProjectsModel();
-  var view = new Collect.ProjectsListView(setModel);
+  var view = new Collect.AppView(setModel);
   var store = new Collect.LocalStore();
-  store.getCollection('projects', function(collection) {
-    for (var i = 0; i < collection.length; i++) {
-      var model = new Collect.ProjectModel();
-      model.setId(collection[i].id);
-      model.setName(collection[i].name);
-      setModel.add(model);
+
+  store.populate('projects', setModel, Collect.ProjectModel, {
+    success: function() {
+      store.addSetModel('projects', setModel);
     }
   });
 
