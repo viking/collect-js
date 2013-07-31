@@ -7,7 +7,7 @@ Collect.Route = function(urlPattern, callback, thisArg) {
 Collect.Route.prototype.process = function(url) {
   var md = url.match(this._urlPattern);
   if (md) {
-    this._callback.call(this._thisArg);
+    this._callback.call(this._thisArg, md.slice(1));
     return true;
   }
   return false;

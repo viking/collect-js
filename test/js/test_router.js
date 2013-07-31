@@ -13,8 +13,8 @@
 
   buster.testCase('Router', {
     setUp: function() {
-      this._url = window.location.href;
-      //console.log("started at", this._url);
+      this.rootUrl = window.location.href;
+      //console.log("started at", this.rootUrl);
       this.router = new Collect.Router(window);
       this.jumps = 0;
     },
@@ -34,15 +34,20 @@
       }
     },
 
-    "Router#go with simple pattern": function(done) {
-      var rootUrl = window.location.href;
+    "simple pattern": function(done) {
       var self = this;
       this.router.add('/foo', done(function() {
-        assert(true);
         assert.same(this, self);
-        assert.equals(window.location.href, rootUrl + "foo");
+        assert.equals(window.location.href, this.rootUrl + "foo");
       }), this);
       go(this, '/foo');
+    },
+
+    "pattern with groups": function(done) {
+      this.router.add('/projects/(\\d+)', done(function(matches) {
+        assert.equals(matches, ["123"]);
+      }));
+      go(this, '/projects/123');
     },
 
     "reacting to popstate": function(done) {
