@@ -6,54 +6,31 @@ buster.testCase('LocalStore', {
 
   "create": function(done) {
     var obj = {
-      attributes: function() { return({foo: "bar"}); }
+      data: {foo: 'bar'},
+      setId: function(id) { this.data.id = id; },
+      attributes: function() { return(this.data); }
     };
 
-    this.store.create({
-      collection: 'stuff',
-      object: obj,
+    this.store.create('stuff', obj, {
       success: done(function(id) {
         assert.equals(id, 1);
+        assert.equals(obj.data.id, 1);
         assert.equals(JSON.parse(localStorage['stuff']), [{id:1,foo:"bar"}])
+      }),
+      failure: done(function(message) {
+        assert(false, message);
       })
     });
   },
 
-  "create requires collection option": function() {
-    var err;
-    var obj = {
-      attributes: function() { return({foo: "bar"}); }
-    };
-    try {
-      this.store.create({object: obj});
-    }
-    catch(thrown) {
-      err = thrown;
-    }
-    assert(err);
-    assert.equals(err, "collection option is required");
-  },
-
-  "create requires object option": function() {
-    var err;
-    try {
-      this.store.create({collection: 'foo'});
-    }
-    catch(thrown) {
-      err = thrown;
-    }
-    assert(err);
-    assert.equals(err, "object option is required");
-  },
-
   "create with existing id": function(done) {
     var obj = {
-      attributes: function() { return({id: 1, foo: "bar"}); }
+      data: {id: 1, foo: 'bar'},
+      setId: function(id) { this.data.id = id; },
+      attributes: function() { return(this.data); }
     };
 
-    this.store.create({
-      collection: 'stuff',
-      object: obj,
+    this.store.create('stuff', obj, {
       failure: done(function(message) {
         assert.equals(message, "record id is non-null");
       })
@@ -62,12 +39,12 @@ buster.testCase('LocalStore', {
 
   "getCollection": function(done) {
     var obj = {
-      attributes: function() { return({foo: "bar"}); }
+      data: {foo: 'bar'},
+      setId: function(id) { this.data.id = id; },
+      attributes: function() { return(this.data); }
     };
     var self = this;
-    this.store.create({
-      collection: 'stuff',
-      object: obj,
+    this.store.create('stuff', obj, {
       success: function(id) {
         self.store.getCollection('stuff', done(function(data) {
           assert.equals(data, [{id:1,foo:"bar"}])
@@ -78,21 +55,16 @@ buster.testCase('LocalStore', {
 
   "update": function(done) {
     var obj = {
-      data: {foo: "bar"},
+      data: {foo: 'bar'},
+      setId: function(id) { this.data.id = id; },
       attributes: function() { return(this.data); }
     };
 
     var self = this;
-    this.store.create({
-      collection: 'stuff',
-      object: obj,
+    this.store.create('stuff', obj, {
       success: function(id) {
-        obj.data.id = id;
-
         obj.data.foo = "baz";
-        self.store.update({
-          collection: 'stuff',
-          object: obj,
+        self.store.update('stuff', obj, {
           success: done(function() {
             assert.equals(
               JSON.parse(localStorage['stuff']),
@@ -104,41 +76,12 @@ buster.testCase('LocalStore', {
     });
   },
 
-  "update requires collection option": function() {
-    var err;
-    var obj = {
-      attributes: function() { return({id: 1, foo: "bar"}); }
-    };
-    try {
-      this.store.update({object: obj});
-    }
-    catch(thrown) {
-      err = thrown;
-    }
-    assert(err);
-    assert.equals(err, "collection option is required");
-  },
-
-  "update requires object option": function() {
-    var err;
-    try {
-      this.store.update({collection: 'foo'});
-    }
-    catch(thrown) {
-      err = thrown;
-    }
-    assert(err);
-    assert.equals(err, "object option is required");
-  },
-
   "update with bad record id": function(done) {
     var obj = {
       attributes: function() { return({id: 1, foo: "bar"}); }
     };
 
-    this.store.update({
-      collection: 'stuff',
-      object: obj,
+    this.store.update('stuff', obj, {
       failure: done(function(message) {
         assert.equals(message, "record not found");
       })

@@ -9,47 +9,29 @@ Collect.LocalStore.prototype.getCollection = function(name, callback) {
   }, 0);
 };
 
-Collect.LocalStore.prototype.create = function(options) {
-  if (typeof(options.collection) == 'undefined') {
-    throw("collection option is required");
-  }
-
-  if (typeof(options.object) == 'undefined') {
-    throw("object option is required");
-  }
-
+Collect.LocalStore.prototype.create = function(collectionName, object, options) {
   var self = this;
   setTimeout(function() {
-    self._create.call(self, options);
+    self._create.call(self, collectionName, object, options);
   }, 0);
 };
 
-Collect.LocalStore.prototype.update = function(options) {
-  if (typeof(options.collection) == 'undefined') {
-    throw("collection option is required");
-  }
-
-  if (typeof(options.object) == 'undefined') {
-    throw("object option is required");
-  }
-
+Collect.LocalStore.prototype.update = function(collectionName, object, options) {
   var self = this;
   setTimeout(function() {
-    self._update.call(self, options);
+    self._update.call(self, collectionName, object, options);
   }, 0);
 };
 
-Collect.LocalStore.prototype._create = function(options) {
-  var obj = options.object;
-  var attributes = obj.attributes();
+Collect.LocalStore.prototype._create = function(collectionName, object, options) {
+  var attributes = object.attributes();
   if (attributes.id) {
-    if (options.failure) {
+    if (options && options.failure) {
       options.failure("record id is non-null");
       return;
     }
   }
 
-  var collectionName = options.collection;
   var collection = this._getCollection(collectionName);
   var nextId = collection.length + 1;
 
@@ -62,17 +44,16 @@ Collect.LocalStore.prototype._create = function(options) {
   collection.push(record);
   this._setCollection(collectionName, collection);
 
-  if (options.success) {
+  object.setId(nextId);
+  if (options && options.success) {
     options.success(nextId);
   }
 };
 
-Collect.LocalStore.prototype._update = function(options) {
-  var collectionName = options.collection;
+Collect.LocalStore.prototype._update = function(collectionName, object, options) {
   var collection = this._getCollection(collectionName);
 
-  var obj = options.object;
-  var attributes = obj.attributes();
+  var attributes = object.attributes();
 
   /* find existing record */
   var record;
@@ -83,7 +64,7 @@ Collect.LocalStore.prototype._update = function(options) {
     }
   }
   if (!record) {
-    if (options.failure) {
+    if (options && options.failure) {
       options.failure("record not found");
       return;
     }
@@ -95,7 +76,7 @@ Collect.LocalStore.prototype._update = function(options) {
   }
   this._setCollection(collectionName, collection);
 
-  if (options.success) {
+  if (options && options.success) {
     options.success();
   }
 };
