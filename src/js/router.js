@@ -29,6 +29,10 @@ Collect.Router.prototype.add = function(urlPattern, callback, thisArg) {
   this._routes.push(new Collect.Route(urlPattern, callback, thisArg));
 };
 
+Collect.Router.prototype.start = function() {
+  this._route();
+};
+
 Collect.Router.prototype.go = function(url) {
   this._window.history.pushState("", "", this.urlFor(url));
   this._routeRelative(url);

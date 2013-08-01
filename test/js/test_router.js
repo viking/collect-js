@@ -5,6 +5,12 @@
     //console.log("went to", window.location.href);
   }
 
+  /* call pushState apart from the router */
+  function go2(test, url) {
+    test.jumps++;
+    window.history.pushState("", "", test.rootUrl + url);
+  }
+
   function back(test) {
     test.jumps--;
     window.history.back();
@@ -51,22 +57,30 @@
     },
 
     "reacting to popstate": function(done) {
-      var called = false;
-      var n = 0;
+      var fooTimes = 0;
+      var barTimes = 0;
       this.router.add('/foo', function() {
-        n++;
-        if (n == 2) {
+        fooTimes++;
+        if (fooTimes == 2) {
+          assert.equals(barTimes, 1);
           done();
         }
       });
       this.router.add('/bar', function() {
-        called = true;
+        barTimes++;
       });
       go(this, '/foo');
       go(this, '/bar');
-      assert(called);
       back(this);
       window.history.back();
-    }
+    },
+
+    "start": function(done) {
+      go2(this, 'foo');
+      this.router.add('/foo', done(function() {
+        assert(true);
+      }));
+      this.router.start();
+    },
   })
 })();
