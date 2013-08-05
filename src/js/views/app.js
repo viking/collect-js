@@ -12,8 +12,7 @@ maria.ElementView.subclass(Collect, 'AppView', {
           self._store.addSetModel('projects', model);
         }
       });
-      this.appendChild(new Collect.ProjectsListView(model));
-      this.appendChild(new Collect.ProjectsFormView(model));
+      this.appendChild(new Collect.ProjectsView(model));
       this.buildChildViews();
     }
   }
