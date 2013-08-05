@@ -117,20 +117,20 @@ buster.testCase('LocalStore', {
     }, 100);
   },
 
-  "populate adds models to set model": function(done) {
+  "findAll adds models to set model": function(done) {
     var setModel = new Collect.ProjectsModel();
     localStorage['projects'] = '[{"id":1,"name":"foo"}]';
-    this.store.populate('projects', setModel, Collect.ProjectModel, {
+    this.store.findAll('projects', setModel, Collect.ProjectModel, {
       success: done(function() {
         assert.equals(setModel.size, 1);
       })
     });
   },
 
-  "populate camelizes attributes": function(done) {
+  "findAll camelizes attributes": function(done) {
     var setModel = new Collect.FormsModel();
     localStorage['forms'] = '[{"id":1,"name":"foo","project_id":1}]';
-    this.store.populate('forms', setModel, Collect.FormModel, {
+    this.store.findAll('forms', setModel, Collect.FormModel, {
       success: done(function() {
         setModel.forEach(function(model) {
           assert.equals(model.getProjectId(), 1);
@@ -139,10 +139,10 @@ buster.testCase('LocalStore', {
     });
   },
 
-  "populate with filter": function(done) {
+  "findAll with filter": function(done) {
     var setModel = new Collect.ProjectsModel();
     localStorage['forms'] = '[{"id":1,"name":"foo","project_id":1},{"id":2,"name":"bar","project_id":1},{"id":3,"name":"baz","project_id":2}]';
-    this.store.populate('forms', setModel, Collect.FormModel, {
+    this.store.findAll('forms', setModel, Collect.FormModel, {
       filter: {project_id: 1},
       success: done(function() {
         assert.equals(setModel.size, 2);

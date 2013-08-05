@@ -7,7 +7,7 @@ maria.ElementView.subclass(Collect, 'AppView', {
     showProjects: function() {
       var model = new Collect.ProjectsModel();
       var self = this;
-      this._store.populate('projects', model, Collect.ProjectModel, {
+      this._store.findAll('projects', model, Collect.ProjectModel, {
         success: function() {
           self._store.addSetModel('projects', model);
         }

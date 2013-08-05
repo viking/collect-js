@@ -69,10 +69,10 @@ Collect.LocalStore.prototype.removeSetModel = function(collectionName, setModel)
   }
 }
 
-Collect.LocalStore.prototype.populate = function(collectionName, setModel, modelClass, options) {
+Collect.LocalStore.prototype.findAll = function(collectionName, setModel, modelClass, options) {
   var self = this;
   setTimeout(function() {
-    self._populate.call(self, collectionName, setModel, modelClass, options);
+    self._findAll.call(self, collectionName, setModel, modelClass, options);
   }, 0);
 }
 
@@ -149,7 +149,7 @@ Collect.LocalStore.prototype._setCollection = function(name, collection) {
   localStorage[name] = JSON.stringify(collection);
 };
 
-Collect.LocalStore.prototype._populate = function(collectionName, setModel, modelClass, options) {
+Collect.LocalStore.prototype._findAll = function(collectionName, setModel, modelClass, options) {
   var collection = this._getCollection(collectionName);
   var models = [];
   for (var i = 0; i < collection.length; i++) {

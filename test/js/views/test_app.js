@@ -6,9 +6,9 @@ buster.testCase('AppView', {
   },
 
   "showProjects": function() {
-    this.stub(this.store, 'populate');
+    this.stub(this.store, 'findAll');
     this.view.showProjects();
-    assert.calledOnce(this.store.populate);
+    assert.calledOnce(this.store.findAll);
     assert(this.view.find('ul.projects'));
     assert(this.view.find('section.projects-form'));
   }

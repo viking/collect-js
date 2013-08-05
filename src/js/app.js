@@ -15,7 +15,7 @@ Collect.App.prototype._setupRoutes = function() {
 Collect.App.prototype._projects = function() {
   var setModel = new Collect.ProjectsModel();
   this._view = new Collect.ProjectsView(setModel);
-  this._store.populate('projects', setModel, Collect.ProjectModel, {
+  this._store.findAll('projects', setModel, Collect.ProjectModel, {
     success: function() {
       store.addSetModel('projects', setModel);
     }
