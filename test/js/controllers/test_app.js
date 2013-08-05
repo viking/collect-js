@@ -2,20 +2,20 @@
   function go(test, url) {
     test.jumps++;
     test.controller.go(url);
-    console.log("controller went to", window.location.href);
+    //console.log("controller went to", window.location.href);
   }
 
   function go2(test, url) {
     test.jumps++;
     window.history.pushState("", "", test.rootUrl + url);
-    console.log("window went to", window.location.href);
+    //console.log("window went to", window.location.href);
   }
 
   function back(test, callback) {
     var popstate = function(e) {
       test.jumps--;
       maria.off(window, 'popstate', popstate);
-      console.log("back to", window.location.href);
+      //console.log("back to", window.location.href);
       callback();
     };
     maria.on(window, 'popstate', popstate);
@@ -26,7 +26,7 @@
     setUp: function() {
       this.rootUrl = window.location.href;
       this.jumps = 0;
-      console.log("started at", this.rootUrl);
+      //console.log("started at", this.rootUrl);
 
       this.controller = new Collect.AppController();
       this.controller.setRootUrl(this.rootUrl);
