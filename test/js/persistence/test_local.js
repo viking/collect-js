@@ -126,4 +126,27 @@ buster.testCase('LocalStore', {
       })
     });
   },
+
+  "populate camelizes attributes": function(done) {
+    var setModel = new Collect.FormsModel();
+    localStorage['forms'] = '[{"id":1,"name":"foo","project_id":1}]';
+    this.store.populate('forms', setModel, Collect.FormModel, {
+      success: done(function() {
+        setModel.forEach(function(model) {
+          assert.equals(model.getProjectId(), 1);
+        });
+      })
+    });
+  },
+
+  "populate with filter": function(done) {
+    var setModel = new Collect.ProjectsModel();
+    localStorage['forms'] = '[{"id":1,"name":"foo","project_id":1},{"id":2,"name":"bar","project_id":1},{"id":3,"name":"baz","project_id":2}]';
+    this.store.populate('forms', setModel, Collect.FormModel, {
+      filter: {project_id: 1},
+      success: done(function() {
+        assert.equals(setModel.size, 2);
+      })
+    });
+  },
 });

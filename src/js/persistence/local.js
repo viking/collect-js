@@ -151,14 +151,27 @@ Collect.LocalStore.prototype._setCollection = function(name, collection) {
 
 Collect.LocalStore.prototype._populate = function(collectionName, setModel, modelClass, options) {
   var collection = this._getCollection(collectionName);
-  var models = collection.map(function(record) {
-    var model = new modelClass();
-    for (key in record) {
-      var method = 'set' + key.charAt(0).toUpperCase() + key.slice(1);
-      model[method].call(model, record[key]);
+  var models = [];
+  for (var i = 0; i < collection.length; i++) {
+    var ok = true;
+    var record = collection[i];
+    if (options.filter) {
+      for (fkey in options.filter) {
+        if (record[fkey] != options.filter[fkey]) {
+          ok = false;
+          break;
+        }
+      }
     }
-    return model;
-  });
+    if (ok) {
+      var model = new modelClass();
+      for (key in record) {
+        var method = 'set' + Collect.camelize(key);
+        model[method].call(model, record[key]);
+      }
+      models.push(model);
+    }
+  }
   setModel.add.apply(setModel, models);
   if (options.success) {
     options.success();
