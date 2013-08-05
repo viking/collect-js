@@ -7,7 +7,6 @@ config["tests"] = {
     "lib/maria.js",
     "src/js/namespace.js",
     "src/js/util.js",
-    "src/js/router.js",
     "src/js/persistence/*.js",
     "src/js/models/*.js",
     "src/js/templates/*.js",

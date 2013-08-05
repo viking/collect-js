@@ -1,13 +1,11 @@
 maria.on(window, "load", function() {
-  var setModel = new Collect.ProjectsModel();
-  var view = new Collect.AppView(setModel);
-  var store = new Collect.LocalStore();
+  var controller = new Collect.AppController();
+  controller.setRootUrl(window.location.href);
 
-  store.populate('projects', setModel, Collect.ProjectModel, {
-    success: function() {
-      store.addSetModel('projects', setModel);
-    }
-  });
+  var store = new Collect.LocalStore();
+  var view = new Collect.AppView(null, controller);
+  view.setStore(store);
 
   document.body.appendChild(view.build());
+  controller.route();
 });
