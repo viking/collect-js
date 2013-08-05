@@ -33,10 +33,29 @@ buster.testCase("FormModel", {
     assert.equals(this.form.getName(), "foo");
   },
 
+  "setProjectId triggers 'change'": function() {
+    maria.on(this.form, "change", this.observer, "trigger");
+    this.form.setProjectId(1);
+    assert(this.observer.triggered);
+  },
+
+  "setProjectId same value doesn't trigger 'change'": function() {
+    this.form.setProjectId(1);
+    maria.on(this.form, "change", this.observer, "trigger");
+    this.form.setProjectId(1);
+    assert(!this.observer.triggered);
+  },
+
+  "getProjectId": function() {
+    this.form.setProjectId(1);
+    assert.equals(this.form.getProjectId(), 1);
+  },
+
   "attributes": function() {
     this.form.setId(1);
     this.form.setName("foo");
-    assert.equals(this.form.attributes(), {id: 1, name: "foo"})
+    this.form.setProjectId(1);
+    assert.equals(this.form.attributes(), {id: 1, name: "foo", project_id: 1})
   }
 });
 

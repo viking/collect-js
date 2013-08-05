@@ -2,10 +2,12 @@ maria.Model.subclass(Collect, 'FormModel', {
   properties: {
     _id: null,
     _name: '',
+    _projectId: null,
     attributes: function() {
       return({
         id: this._id,
-        name: this._name
+        name: this._name,
+        project_id: this._projectId
       });
     },
     setId: function(value) {
@@ -23,6 +25,15 @@ maria.Model.subclass(Collect, 'FormModel', {
     },
     getName: function() {
       return this._name;
+    },
+    setProjectId: function(value) {
+      if (value != this._projectId) {
+        this._projectId = value;
+        this.dispatchEvent({type: 'change'});
+      }
+    },
+    getProjectId: function() {
+      return this._projectId;
     },
   }
 });
