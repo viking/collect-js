@@ -76,6 +76,13 @@ Collect.LocalStore.prototype.findAll = function(collectionName, setModel, modelC
   }, 0);
 }
 
+Collect.LocalStore.prototype.find = function(collectionName, id, modelClass, options) {
+  var self = this;
+  setTimeout(function() {
+    self._find.call(self, collectionName, id, modelClass, options);
+  }, 0);
+}
+
 Collect.LocalStore.prototype._create = function(collectionName, object, options) {
   var attributes = object.attributes();
   if (attributes.id) {
@@ -164,16 +171,26 @@ Collect.LocalStore.prototype._findAll = function(collectionName, setModel, model
       }
     }
     if (ok) {
-      var model = new modelClass();
-      for (key in record) {
-        var method = 'set' + Collect.camelize(key);
-        model[method].call(model, record[key]);
-      }
+      var model = Collect.instantiateModel(modelClass, record);
       models.push(model);
     }
   }
   setModel.add.apply(setModel, models);
   if (options.success) {
     options.success();
+  }
+}
+
+Collect.LocalStore.prototype._find = function(collectionName, id, modelClass, options) {
+  var collection = this._getCollection(collectionName);
+  for (var i = 0; i < collection.length; i++) {
+    var record = collection[i];
+    if (record.id == id) {
+      var model = Collect.instantiateModel(modelClass, record);
+      if (options.success) {
+        options.success(model);
+      }
+      break;
+    }
   }
 }

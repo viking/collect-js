@@ -149,4 +149,14 @@ buster.testCase('LocalStore', {
       })
     });
   },
+
+  "find with id": function(done) {
+    localStorage['projects'] = '[{"id":1,"name":"foo"},{"id":2,"name":"bar"}]';
+    this.store.find('projects', 1, Collect.ProjectModel, {
+      success: done(function(model) {
+        assert.equals(model.getId(), 1);
+        assert.equals(model.getName(), 'foo');
+      })
+    });
+  },
 });
