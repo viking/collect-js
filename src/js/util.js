@@ -5,3 +5,12 @@ Collect.camelize = function(string) {
   });
   return result;
 }
+
+Collect.instantiateModel = function(modelClass, attributes) {
+  var model = new modelClass();
+  for (key in attributes) {
+    var method = 'set' + Collect.camelize(key);
+    model[method].call(model, attributes[key]);
+  }
+  return model;
+}
