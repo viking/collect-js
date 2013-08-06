@@ -59,11 +59,22 @@
     },
 
     "initial route with anchors": function() {
-      var self = this;
       go2(this, 'index.html');
-      self.controller.setRootUrl(self.rootUrl + 'index.html');
+      this.controller.setRootUrl(this.rootUrl + 'index.html');
       this.controller.route();
       assert.calledOnce(this.view.showProjects);
+    },
+
+    "urlFor": function() {
+      assert.equals(this.controller.urlFor('/'), this.rootUrl);
+      assert.equals(this.controller.urlFor('/foo'), this.rootUrl + 'foo');
+    },
+
+    "urlFor with anchors": function() {
+      go2(this, 'index.html');
+      this.controller.setRootUrl(this.rootUrl + 'index.html');
+      assert.equals(this.controller.urlFor('/'), this.rootUrl + 'index.html');
+      assert.equals(this.controller.urlFor('/foo'), this.rootUrl + 'index.html#/foo');
     },
 
     /*
