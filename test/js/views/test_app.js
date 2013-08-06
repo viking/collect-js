@@ -9,7 +9,7 @@ buster.testCase('AppView', {
     this.stub(this.store, 'findAll');
     this.view.showProjects();
     assert.calledOnce(this.store.findAll);
-    assert(this.view.find('ul.projects'));
-    assert(this.view.find('section.projects-form'));
-  }
+    assert.calledWith(this.store.findAll, 'projects');
+    assert(this.view.find('section.projects'));
+  },
 });
