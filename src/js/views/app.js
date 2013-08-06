@@ -4,6 +4,9 @@ maria.ElementView.subclass(Collect, 'AppView', {
     setStore: function(store) {
       this._store = store;
     },
+    urlFor: function(url) {
+      return this.getController().urlFor(url);
+    },
     showProjects: function() {
       var model = new Collect.ProjectsModel();
       var self = this;

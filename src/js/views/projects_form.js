@@ -1,4 +1,8 @@
 maria.ElementView.subclass(Collect, 'ProjectsFormView', {
+  constructor: function() {
+    maria.ElementView.apply(this, arguments);
+    Collect.RouteHelper.mixin(this);
+  },
   uiActions: {
     'click input.create': 'onSubmit'
   },
