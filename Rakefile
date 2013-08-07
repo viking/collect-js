@@ -82,16 +82,22 @@ file get_path('phantomjs', 'bin/phantomjs') do
 end
 
 desc "Run test suite"
-task :test => ['phantomjs:start', 'templates:build'] do
-  buster_test = get_path('buster', 'bin/buster-test')
-  ENV['NODE_PATH'] = 'vendor/node_modules'
-  system(buster_test)
-end
+task :test => ['phantomjs:start', 'test:buster']
+
 task :default => :test
 
 namespace :test do
+  task :buster => ['buster:start', 'templates:build'] do
+    buster_test = get_path('buster', 'bin/buster-test')
+    ENV['NODE_PATH'] = 'vendor/node_modules'
+    system(buster_test)
+  end
+
   desc "Restart servers and run test suite"
   task :restart => ['phantomjs:restart', :test]
+
+  desc "Run manual test"
+  task :manual => 'test:buster'
 end
 
 namespace :buster do
