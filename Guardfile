@@ -11,4 +11,5 @@ end
 
 guard 'rake', :task => 'test:restart', :run_on_start => false, :run_on_all => false do
   watch("test/buster.js")
+  watch("test/lib/helpers.js")
 end
