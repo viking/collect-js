@@ -6,7 +6,9 @@ maria.ElementView.subclass(Collect, 'ProjectItemView', {
   properties: {
     buildData: function() {
       var model = this.getModel();
-      this.find('li').innerHTML = model.getName();
+      var a = this.find('a');
+      a.innerHTML = model.getName();
+      a.setAttribute('href', this.urlFor('/projects/'+model.getId()));
     },
     update: function() {
       this.buildData();

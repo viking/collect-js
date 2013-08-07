@@ -15,7 +15,5 @@ buster.testCase('ProjectsListView', {
   "creates child views": function() {
     var elts = this.view.findAll('li');
     assert.equals(elts.length, 2);
-    assert.equals(elts[0].innerHTML, "foo");
-    assert.equals(elts[1].innerHTML, "bar");
   }
 });

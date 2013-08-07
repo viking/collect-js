@@ -15,5 +15,5 @@ buster.testCase("ProjectView", {
     this.project.setName("bar");
     var h1 = this.view.find('h1');
     assert.equals(h1.innerHTML, "bar");
-  },
+  }
 });

@@ -1,21 +1,19 @@
 (function() {
+  var debug = false;
+
   function go(test, url) {
-    test.jumps++;
-    test.controller.go(url);
-    //console.log("controller went to", window.location.href);
+    window.history.pushState({}, "", test.rootUrl + url);
+    if (debug) {
+      console.log("window went to", window.location.href);
+    }
   }
 
-  function go2(test, url) {
-    test.jumps++;
-    window.history.pushState("", "", test.rootUrl + url);
-    //console.log("window went to", window.location.href);
-  }
-
-  function back(test, callback) {
+  function back(callback) {
     var popstate = function(e) {
-      test.jumps--;
       maria.off(window, 'popstate', popstate);
-      //console.log("back to", window.location.href);
+      if (debug) {
+        console.log("back to", window.location.href);
+      }
       callback();
     };
     maria.on(window, 'popstate', popstate);
@@ -25,28 +23,30 @@
   buster.testCase('AppController', {
     setUp: function() {
       this.rootUrl = window.location.href;
-      this.jumps = 0;
-      //console.log("started at", this.rootUrl);
+      if (debug) {
+        console.log("started at", this.rootUrl);
+      }
 
       this.controller = new Collect.AppController();
       this.controller.setRootUrl(this.rootUrl);
       this.view = new Collect.AppView(null, this.controller);
       this.stub(this.view, 'showProjects');
+      this.stub(this.view, 'showProject');
     },
 
     tearDown: function(done) {
       this.view.destroy();
-      if (this.jumps > 0) {
+      if (window.location.href != this.rootUrl) {
         var self = this;
         var callback = function() {
-          if (self.jumps > 0) {
-            back(self, callback)
+          if (window.location.href != self.rootUrl) {
+            back(callback)
           }
           else {
             done();
           }
         };
-        back(this, callback);
+        back(callback);
       }
       else {
         done();
@@ -59,7 +59,7 @@
     },
 
     "initial route with anchors": function() {
-      go2(this, 'index.html');
+      go(this, 'index.html');
       this.controller.setRootUrl(this.rootUrl + 'index.html');
       this.controller.route();
       assert.calledOnce(this.view.showProjects);
@@ -71,15 +71,60 @@
     },
 
     "urlFor with anchors": function() {
-      go2(this, 'index.html');
+      go(this, 'index.html');
       this.controller.setRootUrl(this.rootUrl + 'index.html');
       assert.equals(this.controller.urlFor('/'), this.rootUrl + 'index.html');
       assert.equals(this.controller.urlFor('/foo'), this.rootUrl + 'index.html#/foo');
     },
 
-    /*
-    "reacting to popstate": function(done) {
+    "project route": function() {
+      this.controller.go('/projects/1');
+      assert.calledWith(this.view.showProject, "1");
     },
-    */
+
+    "intercepts clicks to root url": function() {
+      var a = document.createElement("A");
+      a.setAttribute('href', this.rootUrl);
+      var evt = {target: a, preventDefault: this.spy()};
+      this.controller.onNavigate(evt);
+      assert.calledOnce(this.view.showProjects);
+      assert.calledOnce(evt.preventDefault);
+    },
+
+    "intercepts clicks to project url": function() {
+      var a = document.createElement("A");
+      a.setAttribute('href', this.rootUrl + 'projects/1');
+      var evt = {target: a, preventDefault: this.spy()};
+      this.controller.onNavigate(evt);
+      assert.calledWith(this.view.showProject, "1");
+      assert.calledOnce(evt.preventDefault);
+    },
+
+    "intercepts clicks to project url with anchors": function() {
+      go(this, 'index.html');
+      this.controller.setRootUrl(this.rootUrl + 'index.html')
+      var a = document.createElement("A");
+      a.setAttribute('href', this.rootUrl + 'index.html#/projects/1');
+      var evt = {target: a, preventDefault: this.spy()};
+      this.controller.onNavigate(evt);
+      assert.calledWith(this.view.showProject, "1");
+      assert.calledOnce(evt.preventDefault);
+    },
+
+    "reacting to popstate": function(done) {
+      this.view.build();
+      this.controller.route();
+      this.controller.go('/projects/1');
+      var self = this;
+      back(done(function() {
+        assert.calledTwice(self.view.showProjects);
+      }));
+    },
+
+    "double route call does nothing": function() {
+      this.controller.route();
+      this.controller.route();
+      assert.calledOnce(this.view.showProjects);
+    }
   })
 })();
