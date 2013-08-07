@@ -7,12 +7,18 @@ maria.ElementView.subclass(Collect, 'FormsFormView', {
     'click input.create': 'onSubmit'
   },
   properties: {
+    _projectId: null,
+
+    setProjectId: function(projectId) {
+      this._projectId = projectId;
+    },
+
     reset: function() {
       this.find('input').value = '';
     },
 
     getValues: function() {
-      return({name: this.find('input').value});
+      return({name: this.find('input').value, project_id: this._projectId});
     },
   }
 });

@@ -5,8 +5,9 @@ buster.testCase('FormsFormView', {
   },
 
   "get values": function() {
+    this.view.setProjectId(123);
     this.view.find('input').value = 'foo';
-    assert.equals(this.view.getValues(), {name:'foo'});
+    assert.equals(this.view.getValues(), {name:'foo',project_id:123});
   },
 
   "reset dialog": function() {
