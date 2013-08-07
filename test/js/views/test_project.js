@@ -6,14 +6,14 @@ buster.testCase("ProjectView", {
   },
 
   "inserts name": function() {
-    var h1 = this.view.find('h1');
-    assert.equals(h1.innerHTML, "foo");
+    var span = this.view.find('span.name');
+    assert.equals(span.innerHTML, "foo");
   },
 
   "updates on change": function() {
     this.view.build();
     this.project.setName("bar");
-    var h1 = this.view.find('h1');
-    assert.equals(h1.innerHTML, "bar");
+    var span = this.view.find('span.name');
+    assert.equals(span.innerHTML, "bar");
   }
 });
