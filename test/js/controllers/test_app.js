@@ -1,130 +1,106 @@
-(function() {
-  var debug = false;
-
-  function go(test, url) {
-    window.history.pushState({}, "", test.rootUrl + url);
-    if (debug) {
-      console.log("window went to", window.location.href);
-    }
-  }
-
-  function back(callback) {
-    var popstate = function(e) {
-      maria.off(window, 'popstate', popstate);
-      if (debug) {
-        console.log("back to", window.location.href);
-      }
-      callback();
-    };
-    maria.on(window, 'popstate', popstate);
-    window.history.back();
-  }
-
+define([
+  'views/app',
+  'controllers/app'
+], function(AppView, AppController) {
   buster.testCase('AppController', {
     setUp: function() {
-      this.rootUrl = window.location.href;
-      if (debug) {
-        console.log("started at", this.rootUrl);
-      }
-
-      this.controller = new Collect.AppController();
-      this.controller.setRootUrl(this.rootUrl);
-      this.view = new Collect.AppView(null, this.controller);
+      this.window = {
+        history: {
+          pushState: this.stub()
+        },
+        addEventListener: this.stub()
+      };
+      this.controller = new AppController();
+      this.controller.setWindow(this.window);
+      this.view = new AppView(null, this.controller);
       this.stub(this.view, 'showProjects');
       this.stub(this.view, 'showProject');
     },
 
-    tearDown: function(done) {
-      this.view.destroy();
-      if (window.location.href != this.rootUrl) {
-        var self = this;
-        var callback = function() {
-          if (window.location.href != self.rootUrl) {
-            back(callback)
-          }
-          else {
-            done();
-          }
-        };
-        back(callback);
+    "static page": {
+      setUp: function() {
+        this.window.location = { href: '/index.html' };
+        this.controller.setRootUrl('/index.html');
+      },
+
+      "initial route": function() {
+        this.controller.route();
+        assert.calledOnce(this.view.showProjects);
+      },
+
+      "urlFor": function() {
+        assert.equals(this.controller.urlFor('/'), '/index.html');
+        assert.equals(this.controller.urlFor('/bar'), '/index.html#/bar');
+      },
+
+      "intercepts clicks to project url": function() {
+        var a = document.createElement("A");
+        a.setAttribute('href', '/index.html#/projects/1');
+        var evt = {target: a, preventDefault: this.spy()};
+        this.controller.onNavigate(evt);
+        assert.calledWith(this.view.showProject, "1");
+        assert.calledOnce(evt.preventDefault);
+      },
+    },
+
+    "non-static page": {
+      setUp: function() {
+        this.window.location = { href: '/foo/' };
+        this.controller.setRootUrl('/foo/');
+      },
+
+      "initial route": function() {
+        this.controller.route();
+        assert.calledOnce(this.view.showProjects);
+      },
+
+      "urlFor": function() {
+        assert.equals(this.controller.urlFor('/'), '/foo/');
+        assert.equals(this.controller.urlFor('/bar'), '/foo/bar');
+      },
+
+      "project route": function() {
+        debugger;
+        this.controller.go('projects/1');
+        assert.calledOnce(this.window.history.pushState);
+        assert.calledWith(this.window.history.pushState, {}, "", '/foo/projects/1');
+        assert.calledWith(this.view.showProject, "1");
+      },
+
+      "intercepts clicks to root url": function() {
+        var a = document.createElement("A");
+        a.setAttribute('href', '/foo/');
+        var evt = {target: a, preventDefault: this.spy()};
+        this.controller.onNavigate(evt);
+        assert.calledOnce(this.view.showProjects);
+        assert.calledOnce(evt.preventDefault);
+      },
+
+      "intercepts clicks to project url": function() {
+        var a = document.createElement("A");
+        a.setAttribute('href', '/foo/projects/1');
+        var evt = {target: a, preventDefault: this.spy()};
+        this.controller.onNavigate(evt);
+        assert.calledWith(this.view.showProject, "1");
+        assert.calledOnce(evt.preventDefault);
+      },
+
+      "reacting to popstate": function() {
+        this.view.build();
+        assert.calledWith(this.window.addEventListener, 'popstate');
+        this.controller.route();
+        this.controller.go('projects/1');
+
+        var evt = {};
+        this.window.addEventListener.getCall(0).args[1](evt)
+        assert.calledTwice(this.view.showProjects);
+      },
+
+      "double route call does nothing": function() {
+        this.controller.route();
+        this.controller.route();
+        assert.calledOnce(this.view.showProjects);
       }
-      else {
-        done();
-      }
-    },
-
-    "initial route": function() {
-      this.controller.route();
-      assert.calledOnce(this.view.showProjects);
-    },
-
-    "initial route with anchors": function() {
-      go(this, 'index.html');
-      this.controller.setRootUrl(this.rootUrl + 'index.html');
-      this.controller.route();
-      assert.calledOnce(this.view.showProjects);
-    },
-
-    "urlFor": function() {
-      assert.equals(this.controller.urlFor('/'), this.rootUrl);
-      assert.equals(this.controller.urlFor('/foo'), this.rootUrl + 'foo');
-    },
-
-    "urlFor with anchors": function() {
-      go(this, 'index.html');
-      this.controller.setRootUrl(this.rootUrl + 'index.html');
-      assert.equals(this.controller.urlFor('/'), this.rootUrl + 'index.html');
-      assert.equals(this.controller.urlFor('/foo'), this.rootUrl + 'index.html#/foo');
-    },
-
-    "project route": function() {
-      this.controller.go('/projects/1');
-      assert.calledWith(this.view.showProject, "1");
-    },
-
-    "intercepts clicks to root url": function() {
-      var a = document.createElement("A");
-      a.setAttribute('href', this.rootUrl);
-      var evt = {target: a, preventDefault: this.spy()};
-      this.controller.onNavigate(evt);
-      assert.calledOnce(this.view.showProjects);
-      assert.calledOnce(evt.preventDefault);
-    },
-
-    "intercepts clicks to project url": function() {
-      var a = document.createElement("A");
-      a.setAttribute('href', this.rootUrl + 'projects/1');
-      var evt = {target: a, preventDefault: this.spy()};
-      this.controller.onNavigate(evt);
-      assert.calledWith(this.view.showProject, "1");
-      assert.calledOnce(evt.preventDefault);
-    },
-
-    "intercepts clicks to project url with anchors": function() {
-      go(this, 'index.html');
-      this.controller.setRootUrl(this.rootUrl + 'index.html')
-      var a = document.createElement("A");
-      a.setAttribute('href', this.rootUrl + 'index.html#/projects/1');
-      var evt = {target: a, preventDefault: this.spy()};
-      this.controller.onNavigate(evt);
-      assert.calledWith(this.view.showProject, "1");
-      assert.calledOnce(evt.preventDefault);
-    },
-
-    "reacting to popstate": function(done) {
-      this.view.build();
-      this.controller.route();
-      this.controller.go('/projects/1');
-      var self = this;
-      back(done(function() {
-        assert.calledTwice(self.view.showProjects);
-      }));
-    },
-
-    "double route call does nothing": function() {
-      this.controller.route();
-      this.controller.route();
-      assert.calledOnce(this.view.showProjects);
     }
   })
-})();
+});

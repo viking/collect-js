@@ -3,20 +3,19 @@ var config = module.exports;
 config["tests"] = {
   rootPath: "../",
   environment: "browser",
+  libs: [
+    "lib/require.js",
+    "config.js"
+  ],
   sources: [
     "lib/maria.js",
-    "src/js/namespace.js",
-    "src/js/util.js",
-    "src/js/persistence/*.js",
-    "src/js/models/*.js",
-    "src/js/templates/*.js",
-    "src/js/views/*.js",
-    "src/js/controllers/*.js",
+    "src/js/**/*.js"
   ],
   tests: [
     "test/js/**/test_*.js"
   ],
   testHelpers: [
     "test/lib/helpers.js"
-  ]
+  ],
+  extensions: [require("buster-amd")]
 }

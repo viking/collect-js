@@ -1,22 +1,25 @@
-buster.testCase('FormsView', {
-  setUp: function() {
-    this.forms = new Collect.FormsModel();
-    stubView(this, Collect, 'FormsListView');
-    stubView(this, Collect, 'FormsFormView');
-    this.view = new Collect.FormsView(this.forms);
-  },
+define([
+  'models/forms',
+  'views/forms_list',
+  'views/forms_form',
+  'views/forms'
+], function(FormsModel, FormsListView, FormsFormView, FormsView) {
+  buster.testCase('FormsView', {
+    setUp: function() {
+      this.forms = new FormsModel();
+      this.view = new FormsView(this.forms);
+    },
 
-  "has list and form as children": function() {
-    assert.calledOnce(Collect.FormsListView);
-    assert.same(this.view.childNodes[0], getInstance(Collect, 'FormsListView'));
+    "has list and form as children": function() {
+      assert(this.view.childNodes[0] instanceof FormsListView);
+      assert(this.view.childNodes[1] instanceof FormsFormView);
+    },
 
-    assert.calledOnce(Collect.FormsFormView);
-    assert.same(this.view.childNodes[1], getInstance(Collect, 'FormsFormView'));
-  },
-
-  "setting project id": function() {
-    this.view.setProjectId(123);
-    var formView = getInstance(Collect, 'FormsFormView');
-    assert.calledWith(formView.setProjectId, 123);
-  },
+    "setting project id": function() {
+      var formView = this.view.childNodes[1];
+      this.stub(formView, 'setProjectId');
+      this.view.setProjectId(123);
+      assert.calledWith(formView.setProjectId, 123);
+    }
+  });
 });
