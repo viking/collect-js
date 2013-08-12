@@ -3,6 +3,10 @@ require 'bundler/setup'
 require 'pathname'
 
 NODE_PATH = Pathname.new('vendor/node_modules').expand_path
+def node_package(name)
+  (NODE_PATH + name).to_s
+end
+
 def get_path(package, subpath)
   (NODE_PATH + package + subpath).to_s
 end
@@ -76,12 +80,10 @@ def compile_template(infile, outfile)
   end
 end
 
-file get_path('buster', 'bin/buster-server') do
-  `cd vendor && npm install buster buster-amd`
-end
-
-file get_path('phantomjs', 'bin/phantomjs') do
-  `cd vendor && npm install phantomjs`
+%w{buster buster-amd phantomjs requirejs}.each do |lib|
+  directory node_package(lib) do
+    `cd vendor && npm install #{lib}`
+  end
 end
 
 desc "Run test suite"
@@ -105,7 +107,7 @@ end
 
 namespace :buster do
   desc "Start buster server"
-  task :start do
+  task :start => node_package('buster') do
     path = get_path("buster", "bin/buster-server")
     Rake::Task[path].invoke
     spawn(path, [], /running/, /in use/)
@@ -119,7 +121,7 @@ end
 
 namespace :phantomjs do
   desc "Start phantomjs"
-  task :start => 'buster:start' do
+  task :start => ['buster:start', node_package('phantomjs')] do
     path = get_path('phantomjs', 'bin/phantomjs')
     Rake::Task[path].invoke
     script = get_path("buster", "script/phantom.js")
@@ -164,4 +166,10 @@ namespace :templates do
   rule %r{src/js/templates/(.+?)\.js} => [proc { |n| n.sub(%r{js/(templates/.+?)\.js}, '\1.html') }] do |t|
     compile_template(t.source, t.name)
   end
+end
+
+desc "Build application for optimized viewing"
+task :build => ['templates:build', node_package('requirejs')] do
+  rjs = get_path('requirejs', 'bin/r.js')
+  system(rjs, "-o", "build.js")
 end

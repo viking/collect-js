@@ -4,7 +4,7 @@ requirejs.config({
   }
 });
 
-define([
+require([
   'persistence/local',
   'controllers/app',
   'views/app'
