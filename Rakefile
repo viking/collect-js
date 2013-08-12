@@ -146,7 +146,7 @@ end
 namespace :templates do
   desc "Build templates"
   task :build do
-    templates = FileList["src/templates/*.html"].
+    templates = FileList["src/templates/**/*.html"].
       sub!(%r{(templates/.+?)\.html$}, 'js/\1.js')
     templates.each do |template|
       Rake::Task[template].invoke
@@ -155,9 +155,9 @@ namespace :templates do
 
   desc "Clean up non-existant templates"
   task :clean do
-    valid = FileList["src/templates/*.html"].
+    templates = FileList["src/templates/**/*.html"].
       sub!(%r{(templates/.+?)\.html$}, 'js/\1.js')
-    invalid = FileList["src/js/templates/*.js"] - valid
+    invalid = FileList["src/js/templates/**/*.js"] - valid
     if !invalid.empty?
       FileUtils.rm(invalid, :verbose => true)
     end

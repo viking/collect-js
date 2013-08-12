@@ -6,14 +6,14 @@ define([
   'models/form',
   'models/questions',
   'models/question',
-  'views/projects',
-  'views/project',
-  'views/forms',
-  'views/form',
-  'views/questions',
+  'views/admin/projects',
+  'views/admin/project',
+  'views/admin/forms',
+  'views/admin/form',
+  'views/admin/questions',
   'controllers/app',
   'templates/app'
-], function(maria, ProjectsModel, ProjectModel, FormsModel, FormModel, QuestionsModel, QuestionModel, ProjectsView, ProjectView, FormsView, FormView, QuestionsView, AppController, AppTemplate) {
+], function(maria, ProjectsModel, ProjectModel, FormsModel, FormModel, QuestionsModel, QuestionModel, AdminProjectsView, AdminProjectView, AdminFormsView, AdminFormView, AdminQuestionsView, AppController, AppTemplate) {
 
   var namespace = {};
 
@@ -48,7 +48,7 @@ define([
           }
         });
         this._startTransition();
-        this.appendChild(new ProjectsView(projects));
+        this.appendChild(new AdminProjectsView(projects));
         this._endTransition();
       },
       showProject: function(projectId) {
@@ -56,7 +56,7 @@ define([
         this._store.find('projects', parseInt(projectId), ProjectModel, {
           success: function(project) {
             self._startTransition();
-            self.appendChild(new ProjectView(project));
+            self.appendChild(new AdminProjectView(project));
             var forms = new FormsModel();
             self._store.findAll('forms', forms, FormModel, {
               filter: {project_id: project.getId()},
@@ -64,7 +64,7 @@ define([
                 self._store.addSetModel('forms', forms);
               }
             });
-            var formsView = new FormsView(forms);
+            var formsView = new AdminFormsView(forms);
             formsView.setProjectId(project.getId());
             self.appendChild(formsView);
             self._endTransition();
@@ -76,7 +76,7 @@ define([
         this._store.find('forms', parseInt(formId), FormModel, {
           success: function(form) {
             self._startTransition();
-            self.appendChild(new FormView(form));
+            self.appendChild(new AdminFormView(form));
             var questions = new QuestionsModel();
             self._store.findAll('questions', questions, QuestionModel, {
               filter: {form_id: form.getId()},
@@ -84,7 +84,7 @@ define([
                 self._store.addSetModel('questions', questions);
               }
             });
-            var questionsView = new QuestionsView(questions);
+            var questionsView = new AdminQuestionsView(questions);
             questionsView.setFormId(form.getId());
             self.appendChild(questionsView);
             self._endTransition();
