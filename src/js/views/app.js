@@ -4,12 +4,16 @@ define([
   'models/project',
   'models/forms',
   'models/form',
+  'models/questions',
+  'models/question',
   'views/projects',
   'views/project',
   'views/forms',
+  'views/form',
+  'views/questions',
   'controllers/app',
   'templates/app'
-], function(maria, ProjectsModel, ProjectModel, FormsModel, FormModel, ProjectsView, ProjectView, FormsView, AppController, AppTemplate) {
+], function(maria, ProjectsModel, ProjectModel, FormsModel, FormModel, QuestionsModel, QuestionModel, ProjectsView, ProjectView, FormsView, FormView, QuestionsView, AppController, AppTemplate) {
 
   var namespace = {};
 
@@ -63,6 +67,26 @@ define([
             var formsView = new FormsView(forms);
             formsView.setProjectId(project.getId());
             self.appendChild(formsView);
+            self._endTransition();
+          },
+        });
+      },
+      showForm: function(formId) {
+        var self = this;
+        this._store.find('forms', parseInt(formId), FormModel, {
+          success: function(form) {
+            self._startTransition();
+            self.appendChild(new FormView(form));
+            var questions = new QuestionsModel();
+            self._store.findAll('questions', questions, QuestionModel, {
+              filter: {form_id: form.getId()},
+              success: function() {
+                self._store.addSetModel('questions', questions);
+              }
+            });
+            var questionsView = new QuestionsView(questions);
+            questionsView.setFormId(form.getId());
+            self.appendChild(questionsView);
             self._endTransition();
           },
         });

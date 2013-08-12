@@ -5,11 +5,15 @@ define([
   'models/project',
   'models/forms',
   'models/form',
+  'models/questions',
+  'models/question',
   'views/projects',
   'views/project',
   'views/forms',
+  'views/form',
+  'views/questions',
   'views/app'
-], function(maria, LocalStore, ProjectsModel, ProjectModel, FormsModel, FormModel, ProjectsView, ProjectView, FormsView, AppView) {
+], function(maria, LocalStore, ProjectsModel, ProjectModel, FormsModel, FormModel, QuestionsModel, QuestionModel, ProjectsView, ProjectView, FormsView, FormView, QuestionsView, AppView) {
   buster.testCase('AppView', {
     setUp: function() {
       this.store = new LocalStore();
@@ -55,6 +59,24 @@ define([
       assert(this.view.childNodes[0] !== child);
       assert(this.view.childNodes[0] instanceof ProjectView);
       assert(this.view.childNodes[1] instanceof FormsView);
+    },
+
+    "showForm": function() {
+      var form = sinon.createStubInstance(FormModel);
+      form.getId.returns(123);
+      this.stub(this.store, 'find').yieldsTo('success', form);
+      this.stub(QuestionsView.prototype, 'setFormId');
+
+      this.view.showForm("123");
+
+      assert.calledWith(this.store.find, 'forms', 123, FormModel);
+      assert.calledWith(this.store.findAll, 'questions',
+        sinon.match.instanceOf(QuestionsModel), QuestionModel,
+        sinon.match.has('filter', {form_id: 123}));
+      assert.calledWith(this.store.addSetModel, 'questions', sinon.match.instanceOf(QuestionsModel));
+      assert(this.view.childNodes[0] instanceof FormView);
+      assert(this.view.childNodes[1] instanceof QuestionsView);
+      assert.calledWith(QuestionsView.prototype.setFormId, 123);
     },
   });
 });
