@@ -1,0 +1,2 @@
+- to increase boot time, split up application into chunks when
+  optimizing instead of creating one monolithic file
