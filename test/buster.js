@@ -5,7 +5,7 @@ config["tests"] = {
   environment: "browser",
   libs: [
     "lib/require.js",
-    "config.js"
+    "test/requirejs-config.js"
   ],
   sources: [
     "lib/maria.js",

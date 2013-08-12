@@ -1,10 +1,20 @@
-maria.on(window, "load", function() {
-  var controller = new Collect.AppController();
+requirejs.config({
+  paths: {
+    lib: '../../lib'
+  }
+});
+
+define([
+  'persistence/local',
+  'controllers/app',
+  'views/app'
+], function(LocalStore, AppController, AppView) {
+  var controller = new AppController();
   var url = window.location.href.replace(/#.+$/, "");
   controller.setRootUrl(url);
 
-  var store = new Collect.LocalStore();
-  var view = new Collect.AppView(null, controller);
+  var store = new LocalStore();
+  var view = new AppView(null, controller);
   view.setStore(store);
 
   document.body.appendChild(view.build());
