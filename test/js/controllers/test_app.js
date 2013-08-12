@@ -15,6 +15,7 @@ define([
       this.view = new AppView(null, this.controller);
       this.stub(this.view, 'showProjects');
       this.stub(this.view, 'showProject');
+      this.stub(this.view, 'showForm');
     },
 
     "static page": {
@@ -60,7 +61,6 @@ define([
       },
 
       "project route": function() {
-        debugger;
         this.controller.go('projects/1');
         assert.calledOnce(this.window.history.pushState);
         assert.calledWith(this.window.history.pushState, {}, "", '/foo/projects/1');
@@ -100,7 +100,14 @@ define([
         this.controller.route();
         this.controller.route();
         assert.calledOnce(this.view.showProjects);
-      }
+      },
+
+      "form route": function() {
+        this.controller.go('forms/1');
+        assert.calledOnce(this.window.history.pushState);
+        assert.calledWith(this.window.history.pushState, {}, "", '/foo/forms/1');
+        assert.calledWith(this.view.showForm, "1");
+      },
     }
   })
 });

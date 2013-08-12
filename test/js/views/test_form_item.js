@@ -9,15 +9,20 @@ define(['models/form', 'views/form_item'], function(FormModel, FormItemView) {
     },
 
     "inserts name": function() {
-      var li = this.view.find('li');
-      assert.equals(li.innerHTML, "foo");
+      var a = this.view.find('a');
+      assert.equals(a.innerHTML, "foo");
+    },
+
+    "inserts href": function() {
+      var a = this.view.find('a');
+      assert.equals(a.getAttribute('href'), "/forms/1");
     },
 
     "updates on change": function() {
       this.view.build();
       this.form.setName("bar");
-      var li = this.view.find('li');
-      assert.equals(li.innerHTML, "bar");
+      var a = this.view.find('a');
+      assert.equals(a.innerHTML, "bar");
     },
   });
 });
