@@ -13,9 +13,9 @@ define([
       this.controller = new AppController();
       this.controller.setWindow(this.window);
       this.view = new AppView(null, this.controller);
-      this.stub(this.view, 'showProjects');
-      this.stub(this.view, 'showProject');
-      this.stub(this.view, 'showForm');
+      this.stub(this.view, 'showAdminProjects');
+      this.stub(this.view, 'showAdminProject');
+      this.stub(this.view, 'showAdminForm');
     },
 
     "static page": {
@@ -26,7 +26,7 @@ define([
 
       "initial route": function() {
         this.controller.route();
-        assert.calledOnce(this.view.showProjects);
+        assert.calledOnce(this.view.showAdminProjects);
       },
 
       "urlFor": function() {
@@ -39,7 +39,7 @@ define([
         a.setAttribute('href', '/index.html#/projects/1');
         var evt = {target: a, preventDefault: this.spy()};
         this.controller.onNavigate(evt);
-        assert.calledWith(this.view.showProject, "1");
+        assert.calledWith(this.view.showAdminProject, "1");
         assert.calledOnce(evt.preventDefault);
       },
     },
@@ -52,7 +52,7 @@ define([
 
       "initial route": function() {
         this.controller.route();
-        assert.calledOnce(this.view.showProjects);
+        assert.calledOnce(this.view.showAdminProjects);
       },
 
       "urlFor": function() {
@@ -64,7 +64,7 @@ define([
         this.controller.go('projects/1');
         assert.calledOnce(this.window.history.pushState);
         assert.calledWith(this.window.history.pushState, {}, "", '/foo/projects/1');
-        assert.calledWith(this.view.showProject, "1");
+        assert.calledWith(this.view.showAdminProject, "1");
       },
 
       "intercepts clicks to root url": function() {
@@ -72,7 +72,7 @@ define([
         a.setAttribute('href', '/foo/');
         var evt = {target: a, preventDefault: this.spy()};
         this.controller.onNavigate(evt);
-        assert.calledOnce(this.view.showProjects);
+        assert.calledOnce(this.view.showAdminProjects);
         assert.calledOnce(evt.preventDefault);
       },
 
@@ -81,7 +81,7 @@ define([
         a.setAttribute('href', '/foo/projects/1');
         var evt = {target: a, preventDefault: this.spy()};
         this.controller.onNavigate(evt);
-        assert.calledWith(this.view.showProject, "1");
+        assert.calledWith(this.view.showAdminProject, "1");
         assert.calledOnce(evt.preventDefault);
       },
 
@@ -93,20 +93,20 @@ define([
 
         var evt = {};
         this.window.addEventListener.getCall(0).args[1](evt)
-        assert.calledTwice(this.view.showProjects);
+        assert.calledTwice(this.view.showAdminProjects);
       },
 
       "double route call does nothing": function() {
         this.controller.route();
         this.controller.route();
-        assert.calledOnce(this.view.showProjects);
+        assert.calledOnce(this.view.showAdminProjects);
       },
 
       "form route": function() {
         this.controller.go('forms/1');
         assert.calledOnce(this.window.history.pushState);
         assert.calledWith(this.window.history.pushState, {}, "", '/foo/forms/1');
-        assert.calledWith(this.view.showForm, "1");
+        assert.calledWith(this.view.showAdminForm, "1");
       },
     }
   })

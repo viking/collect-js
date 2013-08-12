@@ -117,15 +117,15 @@ define(['lib/maria'], function(maria) {
       /* actions */
 
       _projects: function() {
-        this.getView().showProjects();
+        this.getView().showAdminProjects();
       },
 
       _project: function(projectId) {
-        this.getView().showProject(projectId);
+        this.getView().showAdminProject(projectId);
       },
 
       _form: function(formId) {
-        this.getView().showForm(formId);
+        this.getView().showAdminForm(formId);
       }
     }
   });
