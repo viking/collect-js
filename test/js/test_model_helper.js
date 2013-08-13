@@ -75,6 +75,13 @@ require(['lib/maria', 'model_helper'], function(maria, ModelHelper) {
       assert.equals(klass.entityName, "foo");
     },
 
+    "collectionName": function() {
+      var klass = newSubclass({
+        collectionName: 'foos'
+      });
+      assert.equals(klass.collectionName, "foos");
+    },
+
     "subclass with hasMany association": function() {
       var setModel = this.spy();
       var options = {

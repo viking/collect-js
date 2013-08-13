@@ -54,6 +54,9 @@ define(['lib/maria', 'util'], function(maria, util) {
     if (options.entityName) {
       klass.entityName = options.entityName;
     }
+    if (options.collectionName) {
+      klass.collectionName = options.collectionName;
+    }
     maria.borrow(klass.prototype, ModelHelper.prototype);
   };
 
