@@ -8,7 +8,8 @@ define(['lib/maria'], function(maria) {
       _type: '',
       _prompt: '',
       _formId: null,
-      attributes: function() {
+
+      getAttributes: function() {
         return({
           id: this._id,
           name: this._name,

@@ -10,7 +10,7 @@ define([
       _name: '',
       _forms: null,
 
-      attributes: function() {
+      getAttributes: function() {
         return({
           id: this._id,
           name: this._name

@@ -38,10 +38,10 @@ define([
       assert.equals(this.project.getName(), "foo");
     },
 
-    "attributes": function() {
+    "getAttributes": function() {
       this.project.setId(1);
       this.project.setName("foo");
-      assert.equals(this.project.attributes(), {id: 1, name: "foo"})
+      assert.equals(this.project.getAttributes(), {id: 1, name: "foo"})
     },
 
     "getForms": function() {

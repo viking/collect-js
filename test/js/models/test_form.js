@@ -56,11 +56,11 @@ define([
       assert.equals(this.form.getProjectId(), 1);
     },
 
-    "attributes": function() {
+    "getAttributes": function() {
       this.form.setId(1);
       this.form.setName("foo");
       this.form.setProjectId(1);
-      assert.equals(this.form.attributes(), {id: 1, name: "foo", project_id: 1})
+      assert.equals(this.form.getAttributes(), {id: 1, name: "foo", project_id: 1})
     },
 
     "getQuestions": function() {

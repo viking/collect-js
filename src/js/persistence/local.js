@@ -85,7 +85,7 @@ define(['lib/maria', 'util'], function(maria, util) {
   }
 
   LocalStore.prototype._create = function(collectionName, object, options) {
-    var attributes = object.attributes();
+    var attributes = object.getAttributes();
     if (attributes.id) {
       if (options && options.failure) {
         options.failure("record id is non-null");
@@ -114,7 +114,7 @@ define(['lib/maria', 'util'], function(maria, util) {
   LocalStore.prototype._update = function(collectionName, object, options) {
     var collection = this._getCollection(collectionName);
 
-    var attributes = object.attributes();
+    var attributes = object.getAttributes();
 
     /* find existing record */
     var record;

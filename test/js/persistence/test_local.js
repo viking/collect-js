@@ -15,7 +15,7 @@ define([
       var obj = {
         data: {foo: 'bar'},
         setId: function(id) { this.data.id = id; },
-        attributes: function() { return(this.data); }
+        getAttributes: function() { return(this.data); }
       };
 
       this.store.create('stuff', obj, {
@@ -34,7 +34,7 @@ define([
       var obj = {
         data: {id: 1, foo: 'bar'},
         setId: function(id) { this.data.id = id; },
-        attributes: function() { return(this.data); }
+        getAttributes: function() { return(this.data); }
       };
 
       this.store.create('stuff', obj, {
@@ -48,7 +48,7 @@ define([
       var obj = {
         data: {foo: 'bar'},
         setId: function(id) { this.data.id = id; },
-        attributes: function() { return(this.data); }
+        getAttributes: function() { return(this.data); }
       };
       var self = this;
       this.store.create('stuff', obj, {
@@ -64,7 +64,7 @@ define([
       var obj = {
         data: {foo: 'bar'},
         setId: function(id) { this.data.id = id; },
-        attributes: function() { return(this.data); }
+        getAttributes: function() { return(this.data); }
       };
 
       var self = this;
@@ -85,7 +85,7 @@ define([
 
     "update with bad record id": function(done) {
       var obj = {
-        attributes: function() { return({id: 1, foo: "bar"}); }
+        getAttributes: function() { return({id: 1, foo: "bar"}); }
       };
 
       this.store.update('stuff', obj, {

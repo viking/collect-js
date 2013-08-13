@@ -11,7 +11,7 @@ define([
       _projectId: null,
       _questions: null,
 
-      attributes: function() {
+      getAttributes: function() {
         return({
           id: this._id,
           name: this._name,

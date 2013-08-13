@@ -88,13 +88,13 @@ define(['lib/maria', 'models/question'], function(maria, QuestionModel) {
       assert.equals(this.question.getFormId(), 1);
     },
 
-    "attributes": function() {
+    "getAttributes": function() {
       this.question.setId(1);
       this.question.setName("foo");
       this.question.setType("text");
       this.question.setPrompt("Foo:");
       this.question.setFormId(1);
-      assert.equals(this.question.attributes(), {
+      assert.equals(this.question.getAttributes(), {
         id: 1, name: "foo", type: "text", prompt: "Foo:", form_id: 1
       })
     }
