@@ -59,17 +59,19 @@ define(['lib/maria', 'util'], function(maria, util) {
     var properties = options.properties || (options.properties = {});
     if (options.associations) {
       for (var associationName in options.associations) {
-        var config = options.associations[associationName];
-        var setModel = config.setModel;
         var getterName = 'get' + util.capitalize(associationName);
         var variableName = '_' + associationName;
+        var config = options.associations[associationName];
+        var setModel = config.setModel;
 
-        properties[getterName] = function() {
-          if (!this[variableName]) {
-            this[variableName] = new setModel();
+        (function(variableName, setModel) {
+          properties[getterName] = function() {
+            if (!this[variableName]) {
+              this[variableName] = new setModel();
+            }
+            return this[variableName];
           }
-          return this[variableName];
-        }
+        })(variableName, setModel);
       }
     }
     if (options.attributeNames) {
@@ -79,12 +81,14 @@ define(['lib/maria', 'util'], function(maria, util) {
         var getterName = 'get' + camelized;
         var setterName = 'set' + camelized;
 
-        properties[getterName] = function() {
-          return this.getAttribute(attributeName);
-        }
-        properties[setterName] = function(value) {
-          this.setAttribute(attributeName, value);
-        }
+        (function(attributeName) {
+          properties[getterName] = function() {
+            return this.getAttribute(attributeName);
+          }
+          properties[setterName] = function(value) {
+            this.setAttribute(attributeName, value);
+          }
+        })(attributeName);
       }
       properties._attributeNames = options.attributeNames;
     }
