@@ -14,7 +14,7 @@ define(['models/project', 'views/admin/project_item'], function(ProjectModel, Ad
 
     "inserts link": function() {
       var a = this.view.find('a');
-      assert.equals(a.getAttribute('href'), "/projects/1");
+      assert.equals(a.getAttribute('href'), "/admin/projects/1");
     },
 
     "updates on change": function() {

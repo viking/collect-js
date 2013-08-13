@@ -15,7 +15,7 @@ define(['models/form', 'views/admin/form_item'], function(FormModel, AdminFormIt
 
     "inserts href": function() {
       var a = this.view.find('a');
-      assert.equals(a.getAttribute('href'), "/forms/1");
+      assert.equals(a.getAttribute('href'), "/admin/forms/1");
     },
 
     "updates on change": function() {

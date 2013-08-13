@@ -17,7 +17,7 @@ define([
         var model = this.getModel();
         var a = this.find('a');
         a.innerHTML = model.getName();
-        a.setAttribute('href', this.urlFor('/projects/'+model.getId()));
+        a.setAttribute('href', this.urlFor('/admin/projects/'+model.getId()));
       },
       update: function() {
         this.buildData();
