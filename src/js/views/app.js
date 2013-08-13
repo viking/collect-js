@@ -40,17 +40,11 @@ define([
       urlFor: function(url) {
         return this.getController().urlFor(url);
       },
+      showProjects: function() {
+        this._showProjects(false);
+      },
       showAdminProjects: function() {
-        var projects = new ProjectsModel();
-        var self = this;
-        this._store.findAll('projects', projects, ProjectModel, {
-          success: function() {
-            self._store.addSetModel('projects', projects);
-          }
-        });
-        this._startTransition();
-        this.appendChild(new AdminProjectsView(projects));
-        this._endTransition();
+        this._showProjects(true);
       },
       showAdminProject: function(projectId) {
         var self = this;
@@ -100,7 +94,21 @@ define([
       },
       _endTransition: function() {
         this.find('.loading').style.display = 'none';
-      }
+      },
+      _showProjects: function(admin) {
+        var projects = new ProjectsModel();
+        var self = this;
+        this._store.findAll('projects', projects, ProjectModel, {
+          success: function() {
+            self._store.addSetModel('projects', projects);
+          }
+        });
+
+        var childView = admin ? AdminProjectsView : ProjectsView;
+        this._startTransition();
+        this.appendChild(new childView(projects));
+        this._endTransition();
+      },
     }
   });
 

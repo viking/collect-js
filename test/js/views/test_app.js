@@ -7,13 +7,14 @@ define([
   'models/form',
   'models/questions',
   'models/question',
+  'views/projects',
   'views/admin/projects',
   'views/admin/project',
   'views/admin/forms',
   'views/admin/form',
   'views/admin/questions',
   'views/app'
-], function(maria, LocalStore, ProjectsModel, ProjectModel, FormsModel, FormModel, QuestionsModel, QuestionModel, AdminProjectsView, AdminProjectView, AdminFormsView, AdminFormView, AdminQuestionsView, AppView) {
+], function(maria, LocalStore, ProjectsModel, ProjectModel, FormsModel, FormModel, QuestionsModel, QuestionModel, ProjectsView, AdminProjectsView, AdminProjectView, AdminFormsView, AdminFormView, AdminQuestionsView, AppView) {
   buster.testCase('AppView', {
     setUp: function() {
       this.store = new LocalStore();
@@ -21,6 +22,13 @@ define([
       this.view.setStore(this.store);
       this.stub(this.store, 'findAll').yieldsTo('success');
       this.stub(this.store, 'addSetModel');
+    },
+
+    "showProjects": function() {
+      this.view.showProjects();
+      assert.calledWith(this.store.findAll, 'projects', sinon.match.instanceOf(ProjectsModel), ProjectModel);
+      assert.calledWith(this.store.addSetModel, 'projects', sinon.match.instanceOf(ProjectsModel));
+      assert(this.view.childNodes[0] instanceof ProjectsView);
     },
 
     "showAdminProjects": function() {
