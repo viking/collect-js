@@ -1,13 +1,17 @@
 define(function() {
   var util = {};
 
+  util.capitalize = function(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   util.camelize = function(string) {
     var result = '';
     string.split('_').forEach(function(s) {
-      result += s.charAt(0).toUpperCase() + s.slice(1);
+      result += util.capitalize(s);
     });
     return result;
-  }
+  };
 
   util.instantiateModel = function(modelClass, attributes) {
     var model = new modelClass();
@@ -16,7 +20,7 @@ define(function() {
       model[method].call(model, attributes[key]);
     }
     return model;
-  }
+  };
 
   return util;
 });
