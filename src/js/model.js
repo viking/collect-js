@@ -5,9 +5,20 @@ define(['lib/maria', 'util'], function(maria, util) {
     constructor: function() {
       maria.Model.apply(this, arguments);
       this._attributes = {};
+      if (this._attributeNames) {
+        for (var i = 0; i < this._attributeNames.length; i++) {
+          this._attributes[this._attributeNames[i]] = null;
+        }
+      }
     },
     properties: {
+      _attributeNames: null,
+
       setAttribute: function(name, value, quiet) {
+        if (this._attributeNames && this._attributeNames.indexOf(name) < 0) {
+          throw("invalid attribute: " + name);
+        }
+
         if (this._attributes[name] != value) {
           this._attributes[name] = value;
           if (!quiet) {
@@ -30,6 +41,13 @@ define(['lib/maria', 'util'], function(maria, util) {
         }
       },
 
+      getAttribute: function(name) {
+        if (this._attributeNames && this._attributeNames.indexOf(name) < 0) {
+          throw("invalid attribute: " + name);
+        }
+        return this._attributes[name];
+      },
+
       getAttributes: function() {
         return this._attributes;
       },
@@ -38,8 +56,8 @@ define(['lib/maria', 'util'], function(maria, util) {
 
   ns.Model.subclass = function(namespace, name, options) {
     options = options || {};
+    var properties = options.properties || (options.properties = {});
     if (options.associations) {
-      var properties = options.properties || (options.properties = {});
       for (var associationName in options.associations) {
         var config = options.associations[associationName];
         var setModel = config.setModel;
@@ -53,6 +71,22 @@ define(['lib/maria', 'util'], function(maria, util) {
           return this[variableName];
         }
       }
+    }
+    if (options.attributeNames) {
+      for (var i = 0; i < options.attributeNames.length; i++) {
+        var attributeName = options.attributeNames[i];
+        var camelized = util.camelize(attributeName);
+        var getterName = 'get' + camelized;
+        var setterName = 'set' + camelized;
+
+        properties[getterName] = function() {
+          return this.getAttribute(attributeName);
+        }
+        properties[setterName] = function(value) {
+          this.setAttribute(attributeName, value);
+        }
+      }
+      properties._attributeNames = options.attributeNames;
     }
     maria.subclass.call(this, namespace, name, options);
     var klass = namespace[name];

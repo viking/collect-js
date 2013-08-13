@@ -11,6 +11,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
       var model = new klass();
       model.setAttribute('foo', 123);
       assert.equals(model.getAttributes(), {foo: 123})
+      assert.equals(model.getAttribute('foo'), 123)
     },
 
     "setAttributes": function() {
@@ -88,6 +89,47 @@ require(['lib/maria', 'model'], function(maria, Model) {
 
       var foo = new klass();
       var bars = foo.getBars();
+    },
+
+    "attribute names": function() {
+      var klass = newSubclass({
+        attributeNames: ['id', 'name', 'project_id']
+      });
+      var model = new klass();
+      assert.equals(model.getAttributes(), {id: null, name: null, project_id: null});
+    },
+
+    "set invalid attribute": function() {
+      var klass = newSubclass({
+        attributeNames: ['id', 'name', 'project_id']
+      });
+      var model = new klass();
+      assert.exception(function() {
+        model.setAttribute('foo', 123);
+      });
+    },
+
+    "get invalid attribute": function() {
+      var klass = newSubclass({
+        attributeNames: ['id', 'name', 'project_id']
+      });
+      var model = new klass();
+      assert.exception(function() {
+        model.getAttribute('foo');
+      });
+    },
+
+    "attribute helpers": function() {
+      var klass = newSubclass({
+        attributeNames: ['id', 'name', 'project_id']
+      });
+      var model = new klass();
+      model.setId(123);
+      assert.equals(model.getId(), 123);
+      model.setName('foo');
+      assert.equals(model.getName(), 'foo');
+      model.setProjectId(456);
+      assert.equals(model.getProjectId(), 456);
     }
   });
 });
