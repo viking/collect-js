@@ -13,6 +13,11 @@ define([
       maria.ElementView.apply(this, arguments);
       RouteHelper.mixin(this);
       this.appendChild(new ProjectsListView(model));
+    },
+    properties: {
+      buildData: function() {
+        this.find('a').setAttribute('href', this.urlFor('admin/projects'));
+      }
     }
   });
 

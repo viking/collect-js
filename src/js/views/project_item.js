@@ -15,8 +15,7 @@ define([
     properties: {
       buildData: function() {
         var model = this.getModel();
-        this.find('span.name').innerHTML = model.getName();
-        this.find('a').setAttribute('href', this.urlFor('/admin/projects/'+model.getId()));
+        this.find('li').innerHTML = model.getName();
       },
       update: function() {
         this.buildData();

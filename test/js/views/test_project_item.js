@@ -8,17 +8,13 @@ define(['models/project', 'views/project_item'], function(ProjectModel, ProjectI
     },
 
     "inserts name": function() {
-      assert.equals(this.view.find('span.name').innerHTML, "foo");
-    },
-
-    "inserts link": function() {
-      assert.equals(this.view.find('a').getAttribute('href'), "/admin/projects/1");
+      assert.equals(this.view.find('li').innerHTML, "foo");
     },
 
     "updates on change": function() {
       this.view.build();
       this.project.setName("bar");
-      assert.equals(this.view.find('span.name').innerHTML, "bar");
+      assert.equals(this.view.find('li').innerHTML, "bar");
     },
   });
 });
