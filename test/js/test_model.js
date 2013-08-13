@@ -1,13 +1,7 @@
-require(['lib/maria', 'model_helper'], function(maria, ModelHelper) {
+require(['lib/maria', 'model'], function(maria, Model) {
   function newSubclass(options) {
     var namespace = {};
-    maria.Model.subclass(namespace, 'FooModel', {
-      constructor: function() {
-        maria.Model.apply(this, arguments);
-        ModelHelper.apply(this);
-      }
-    });
-    ModelHelper.extend(namespace.FooModel, options);
+    Model.subclass(namespace, 'FooModel', options);
     return namespace.FooModel;
   }
 
