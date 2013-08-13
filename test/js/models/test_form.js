@@ -1,4 +1,8 @@
-define(['lib/maria', 'models/form'], function(maria, FormModel) {
+define([
+  'lib/maria',
+  'models/form',
+  'models/questions',
+], function(maria, FormModel, QuestionsModel) {
   buster.testCase("FormModel", {
     setUp: function() {
       this.form = new FormModel();
@@ -57,6 +61,12 @@ define(['lib/maria', 'models/form'], function(maria, FormModel) {
       this.form.setName("foo");
       this.form.setProjectId(1);
       assert.equals(this.form.attributes(), {id: 1, name: "foo", project_id: 1})
+    },
+
+    "getQuestions": function() {
+      var questions = this.form.getQuestions();
+      assert(questions instanceof QuestionsModel);
+      assert.same(questions, this.form.getQuestions());
     }
   });
 });

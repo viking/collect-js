@@ -1,10 +1,15 @@
-define(['lib/maria'], function(maria) {
+define([
+  'lib/maria',
+  'models/forms'
+], function(maria, FormsModel) {
   var namespace = {};
 
   maria.Model.subclass(namespace, 'ProjectModel', {
     properties: {
       _id: null,
       _name: '',
+      _forms: null,
+
       attributes: function() {
         return({
           id: this._id,
@@ -27,6 +32,14 @@ define(['lib/maria'], function(maria) {
       getName: function() {
         return this._name;
       },
+
+      /* associations */
+      getForms: function() {
+        if (!this._forms) {
+          this._forms = new FormsModel();
+        }
+        return this._forms;
+      }
     }
   });
 

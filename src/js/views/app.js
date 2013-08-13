@@ -2,9 +2,7 @@ define([
   'lib/maria',
   'models/projects',
   'models/project',
-  'models/forms',
   'models/form',
-  'models/questions',
   'models/question',
   'views/projects',
   'views/admin/projects',
@@ -14,7 +12,7 @@ define([
   'views/admin/questions',
   'controllers/app',
   'templates/app'
-], function(maria, ProjectsModel, ProjectModel, FormsModel, FormModel, QuestionsModel, QuestionModel, ProjectsView, AdminProjectsView, AdminProjectView, AdminFormsView, AdminFormView, AdminQuestionsView, AppController, AppTemplate) {
+], function(maria, ProjectsModel, ProjectModel, FormModel, QuestionModel, ProjectsView, AdminProjectsView, AdminProjectView, AdminFormsView, AdminFormView, AdminQuestionsView, AppController, AppTemplate) {
 
   var namespace = {};
 
@@ -52,13 +50,15 @@ define([
           success: function(project) {
             self._startTransition();
             self.appendChild(new AdminProjectView(project));
-            var forms = new FormsModel();
+
+            var forms = project.getForms();
             self._store.findAll('forms', forms, FormModel, {
               filter: {project_id: project.getId()},
               success: function() {
                 self._store.addSetModel('forms', forms);
               }
             });
+
             var formsView = new AdminFormsView(forms);
             formsView.setProjectId(project.getId());
             self.appendChild(formsView);
@@ -72,7 +72,8 @@ define([
           success: function(form) {
             self._startTransition();
             self.appendChild(new AdminFormView(form));
-            var questions = new QuestionsModel();
+
+            var questions = form.getQuestions();
             self._store.findAll('questions', questions, QuestionModel, {
               filter: {form_id: form.getId()},
               success: function() {
