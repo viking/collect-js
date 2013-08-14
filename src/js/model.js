@@ -81,6 +81,16 @@ define(['lib/maria', 'util'], function(maria, util) {
         if (typeof(this._attributes[attributeName]) != type) {
           this.addError(attributeName + ' must be of type "' + type + '"');
         }
+      },
+
+      validatesUnique: function(attributeName, set) {
+        var value = this._attributes[attributeName];
+        var valid = true;
+        set.forEach(function(model) {
+          if (valid && model !== this && model.getAttribute(attributeName) == value) {
+            this.addError(attributeName + ' is already taken');
+          }
+        }, this);
       }
     }
   });

@@ -162,7 +162,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
       assert(model.isValid());
     },
 
-    "validate event": function() {
+    "dispatch validate event": function() {
       var klass = newSubclass();
       var model = new klass();
       maria.on(model, 'validate', function(evt) {
@@ -170,6 +170,23 @@ require(['lib/maria', 'model'], function(maria, Model) {
         m.addError('foo');
       });
       refute(model.isValid());
-    }
+    },
+
+    "validates unique": function() {
+      var klass = newSubclass();
+      var model_1 = new klass();
+      model_1.setAttribute('foo', 'bar');
+      var model_2 = new klass();
+      model_2.setAttribute('foo', 'baz');
+      var setModel = new maria.SetModel();
+      setModel.add(model_1);
+      setModel.add(model_2);
+      maria.on(model_1, 'validate', function(evt) {
+        evt.target.validatesUnique('foo', setModel);
+      });
+      assert(model_1.isValid());
+      model_1.setAttribute('foo', 'baz');
+      refute(model_1.isValid());
+    },
   });
 });
