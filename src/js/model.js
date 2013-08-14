@@ -59,7 +59,12 @@ define(['lib/maria', 'util'], function(maria, util) {
       isValid: function() {
         this._errors.length = 0;
         this.validate();
+        this.dispatchEvent({type: 'validate'});
         return this._errors.length == 0;
+      },
+
+      addError: function(msg) {
+        this._errors.push(msg);
       },
 
       getErrors: function() {
@@ -68,13 +73,13 @@ define(['lib/maria', 'util'], function(maria, util) {
 
       validatesPresence: function(attributeName) {
         if (!this._attributes.hasOwnProperty(attributeName) || this._attributes[attributeName] == null) {
-          this._errors.push(attributeName + ' is required');
+          this.addError(attributeName + ' is required');
         }
       },
 
       validatesType: function(attributeName, type) {
         if (typeof(this._attributes[attributeName]) != type) {
-          this._errors.push(attributeName + ' must be of type "' + type + '"');
+          this.addError(attributeName + ' must be of type "' + type + '"');
         }
       }
     }

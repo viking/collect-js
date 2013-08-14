@@ -160,6 +160,16 @@ require(['lib/maria', 'model'], function(maria, Model) {
       refute(model.isValid());
       model.setAttribute('foo', 123);
       assert(model.isValid());
+    },
+
+    "validate event": function() {
+      var klass = newSubclass();
+      var model = new klass();
+      maria.on(model, 'validate', function(evt) {
+        var m = evt.target;
+        m.addError('foo');
+      });
+      refute(model.isValid());
     }
   });
 });
