@@ -48,6 +48,19 @@ define([
       var forms = this.project.getForms();
       assert(forms instanceof FormsModel);
       assert.same(forms, this.project.getForms());
+    },
+
+    "requires presence of name": function() {
+      refute(this.project.isValid());
+      this.project.setName('foo');
+      assert(this.project.isValid());
+    },
+
+    "requires name be a string": function() {
+      this.project.setName(123);
+      refute(this.project.isValid());
+      this.project.setName('foo');
+      assert(this.project.isValid());
     }
   });
 });

@@ -8,6 +8,12 @@ define([
     attributeNames: ['id', 'name'],
     associations: {
       forms: {type: 'hasMany', setModel: FormsModel, key: 'project_id'}
+    },
+    properties: {
+      validate: function() {
+        this.validatesPresence('name');
+        this.validatesType('name', 'string');
+      }
     }
   });
 
