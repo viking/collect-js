@@ -15,6 +15,7 @@ define([
       var obj = {
         data: {foo: 'bar'},
         setId: function(id) { this.data.id = id; },
+        isValid: function() { return true; },
         getAttributes: function() { return(this.data); }
       };
 
@@ -33,6 +34,7 @@ define([
     "create with existing id": function(done) {
       var obj = {
         data: {id: 1, foo: 'bar'},
+        isValid: function() { return true; },
         setId: function(id) { this.data.id = id; },
         getAttributes: function() { return(this.data); }
       };
@@ -48,6 +50,7 @@ define([
       var obj = {
         data: {foo: 'bar'},
         setId: function(id) { this.data.id = id; },
+        isValid: function() { return true; },
         getAttributes: function() { return(this.data); }
       };
       var self = this;
@@ -64,6 +67,7 @@ define([
       var obj = {
         data: {foo: 'bar'},
         setId: function(id) { this.data.id = id; },
+        isValid: function() { return true; },
         getAttributes: function() { return(this.data); }
       };
 
@@ -85,7 +89,8 @@ define([
 
     "update with bad record id": function(done) {
       var obj = {
-        getAttributes: function() { return({id: 1, foo: "bar"}); }
+        getAttributes: function() { return({id: 1, foo: "bar"}); },
+        isValid: function() { return true; }
       };
 
       this.store.update('stuff', obj, {
@@ -166,5 +171,40 @@ define([
         })
       });
     },
+
+    "prevent create when object is not valid": function(done) {
+      var obj = {
+        data: {foo: 'bar'},
+        setId: function(id) { this.data.id = id; },
+        isValid: function() { return false; },
+        getAttributes: function() { return(this.data); }
+      };
+
+      this.store.create('stuff', obj, {
+        success: done(function(id) {
+          assert(false, "model should not have been created");
+        }),
+        failure: done(function(model) {
+          assert.same(model, obj);
+        })
+      });
+    },
+
+    "prevent update when object is not valid": function(done) {
+      var obj = {
+        data: {id: 1, foo: 'bar'},
+        isValid: function() { return false; },
+        getAttributes: function() { return(this.data); }
+      };
+
+      this.store.update('stuff', obj, {
+        success: done(function(id) {
+          assert(false, "model should not have been updated");
+        }),
+        failure: done(function(model) {
+          assert.same(model, obj);
+        })
+      });
+    }
   });
 });

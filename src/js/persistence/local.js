@@ -34,6 +34,13 @@ define(['lib/maria', 'util'], function(maria, util) {
   };
 
   LocalStore.prototype.create = function(collectionName, object, options) {
+    if (!object.isValid()) {
+      if (options.failure) {
+        options.failure(object);
+      }
+      return;
+    }
+
     var self = this;
     setTimeout(function() {
       self._create.call(self, collectionName, object, options);
@@ -41,6 +48,13 @@ define(['lib/maria', 'util'], function(maria, util) {
   };
 
   LocalStore.prototype.update = function(collectionName, object, options) {
+    if (!object.isValid()) {
+      if (options.failure) {
+        options.failure(object);
+      }
+      return;
+    }
+
     var self = this;
     setTimeout(function() {
       self._update.call(self, collectionName, object, options);
