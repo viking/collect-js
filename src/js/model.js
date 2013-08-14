@@ -10,6 +10,7 @@ define(['lib/maria', 'util'], function(maria, util) {
           this._attributes[this._attributeNames[i]] = null;
         }
       }
+      this._errors = [];
     },
     properties: {
       _attributeNames: null,
@@ -51,6 +52,31 @@ define(['lib/maria', 'util'], function(maria, util) {
       getAttributes: function() {
         return this._attributes;
       },
+
+      validate: function() {
+      },
+
+      isValid: function() {
+        this._errors.length = 0;
+        this.validate();
+        return this._errors.length == 0;
+      },
+
+      getErrors: function() {
+        return this._errors;
+      },
+
+      validatesPresence: function(attributeName) {
+        if (!this._attributes.hasOwnProperty(attributeName) || this._attributes[attributeName] == null) {
+          this._errors.push(attributeName + ' is required');
+        }
+      },
+
+      validatesType: function(attributeName, type) {
+        if (typeof(this._attributes[attributeName]) != type) {
+          this._errors.push(attributeName + ' must be of type "' + type + '"');
+        }
+      }
     }
   });
 

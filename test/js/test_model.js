@@ -130,6 +130,36 @@ require(['lib/maria', 'model'], function(maria, Model) {
       assert.equals(model.getName(), 'foo');
       model.setProjectId(456);
       assert.equals(model.getProjectId(), 456);
+    },
+
+    "validate presence": function() {
+      var klass = newSubclass({
+        properties: {
+          validate: function() {
+            this.validatesPresence('foo');
+          }
+        }
+      });
+      var model = new klass();
+      refute(model.isValid());
+      assert.equals(model.getErrors().length, 1);
+      model.setAttribute('foo', 123);
+      assert(model.isValid());
+    },
+
+    "validate type": function() {
+      var klass = newSubclass({
+        properties: {
+          validate: function() {
+            this.validatesType('foo', 'number');
+          }
+        }
+      });
+      var model = new klass();
+      model.setAttribute('foo', 'bar');
+      refute(model.isValid());
+      model.setAttribute('foo', 123);
+      assert(model.isValid());
     }
   });
 });
