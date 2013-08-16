@@ -142,7 +142,23 @@ require(['lib/maria', 'model'], function(maria, Model) {
       });
       var model = new klass();
       refute(model.isValid());
-      assert.equals(model.getErrors().length, 1);
+      assert.equals(model.getErrors(), {foo: ['is required']});
+      model.setAttribute('foo', 123);
+      assert(model.isValid());
+    },
+
+    "validate presence rejects empty string": function() {
+      var klass = newSubclass({
+        properties: {
+          validate: function() {
+            this.validatesPresence('foo');
+          }
+        }
+      });
+      var model = new klass();
+      model.setAttribute('foo', '');
+      refute(model.isValid());
+      assert.equals(model.getErrors(), {foo: ['is required']});
       model.setAttribute('foo', 123);
       assert(model.isValid());
     },

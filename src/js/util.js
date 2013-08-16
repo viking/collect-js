@@ -22,5 +22,23 @@ define(function() {
     return model;
   };
 
+  util.numProperties = function(object) {
+    var num = 0;
+    for (key in object) {
+      if (Object.prototype.hasOwnProperty.call(object, key)) {
+        num++;
+      }
+    }
+    return num;
+  };
+
+  util.clearProperties = function(object) {
+    for (key in object) {
+      if (Object.prototype.hasOwnProperty.call(object, key)) {
+        delete object[key];
+      }
+    }
+  }
+
   return util;
 });

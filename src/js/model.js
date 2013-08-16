@@ -10,7 +10,7 @@ define(['lib/maria', 'util'], function(maria, util) {
           this._attributes[this._attributeNames[i]] = null;
         }
       }
-      this._errors = [];
+      this._errors = {};
     },
     properties: {
       _attributeNames: null,
@@ -57,14 +57,17 @@ define(['lib/maria', 'util'], function(maria, util) {
       },
 
       isValid: function() {
-        this._errors.length = 0;
+        util.clearProperties(this._errors);
         this.validate();
         this.dispatchEvent({type: 'validate'});
-        return this._errors.length == 0;
+
+        /* check for errors */
+        return util.numProperties(this._errors) == 0;
       },
 
-      addError: function(msg) {
-        this._errors.push(msg);
+      addError: function(attributeName, msg) {
+        var errors = this._errors[attributeName] || (this._errors[attributeName] = []);
+        errors.push(msg);
       },
 
       getErrors: function() {
@@ -72,14 +75,16 @@ define(['lib/maria', 'util'], function(maria, util) {
       },
 
       validatesPresence: function(attributeName) {
-        if (!this._attributes.hasOwnProperty(attributeName) || this._attributes[attributeName] == null) {
-          this.addError(attributeName + ' is required');
+        if (!this._attributes.hasOwnProperty(attributeName) ||
+            this._attributes[attributeName] == null ||
+            this._attributes[attributeName] == "") {
+          this.addError(attributeName, 'is required');
         }
       },
 
       validatesType: function(attributeName, type) {
         if (typeof(this._attributes[attributeName]) != type) {
-          this.addError(attributeName + ' must be of type "' + type + '"');
+          this.addError(attributeName, 'must be of type "' + type + '"');
         }
       },
 
@@ -88,7 +93,7 @@ define(['lib/maria', 'util'], function(maria, util) {
         var valid = true;
         set.forEach(function(model) {
           if (valid && model !== this && model.getAttribute(attributeName) == value) {
-            this.addError(attributeName + ' is already taken');
+            this.addError(attributeName, 'is already taken');
           }
         }, this);
       }

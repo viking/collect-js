@@ -1,4 +1,8 @@
-define(['models/form', 'util'], function(FormModel, util) {
+define([
+  'lib/maria',
+  'models/form',
+  'util'
+], function(maria, FormModel, util) {
   buster.testCase('util', {
 
     "camelize": function() {
@@ -15,6 +19,28 @@ define(['models/form', 'util'], function(FormModel, util) {
 
     "capitalize": function() {
       assert.equals(util.capitalize("huge"), "Huge");
-    }
+    },
+
+    "numProperties": function() {
+      assert.equals(0, util.numProperties({}));
+      assert.equals(1, util.numProperties({foo: 'bar'}));
+
+      var foo = function() {
+        this.foo = 'bar';
+      };
+      var bar = function() {
+        this.bar = 'baz';
+      }
+      bar.prototype = maria.create(foo);
+
+      assert.equals(util.numProperties(new bar()), 1);
+    },
+
+    "clearProperties": function() {
+      var obj = {foo: 123, bar: 456};
+      util.clearProperties(obj);
+      assert.equals(typeof(obj.foo), 'undefined');
+      assert.equals(typeof(obj.bar), 'undefined');
+    },
   });
 });
