@@ -16,6 +16,17 @@ define(['models/projects', 'views/admin/projects_form'], function(ProjectsModel,
 
       this.view.reset();
       assert.equals(input.value, '');
+    },
+
+    "display errors": function() {
+      this.view.displayErrors({name: ['foo']});
+      assert.equals(this.view.find('input').getAttribute('class'), 'name error');
+    },
+
+    "reset clears errors": function() {
+      this.view.displayErrors({name: ['foo']});
+      this.view.reset();
+      refute(this.view.find('.error'));
     }
   });
 });

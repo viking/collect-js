@@ -6,10 +6,18 @@ define(['lib/maria', 'models/project'], function(maria, ProjectModel) {
       onSubmit: function() {
         var view = this.getView();
         var values = view.getValues();
+        var model = this.getModel();
         var project = new ProjectModel();
         project.setName(values.name);
-        this.getModel().add(project);
-        view.reset();
+
+        maria.on(project, 'validate', model, 'onValidateProject');
+        if (project.isValid()) {
+          model.add(project);
+          view.reset();
+        }
+        else {
+          view.displayErrors(project.getErrors());
+        }
       }
     }
   });
