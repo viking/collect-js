@@ -10,3 +10,7 @@ section.app {
   right: 0;
   background: url(../images/animated-overlay.gif);
 }
+
+.error {
+  border: 1px solid red;
+}
