@@ -67,6 +67,20 @@ define([
       var questions = this.form.getQuestions();
       assert(questions instanceof QuestionsModel);
       assert.same(questions, this.form.getQuestions());
+    },
+
+    "validates name": function() {
+      this.form.setProjectId(123);
+      refute(this.form.isValid());
+      this.form.setName('foo');
+      assert(this.form.isValid());
+    },
+
+    "validates project_id": function() {
+      this.form.setName('foo');
+      refute(this.form.isValid());
+      this.form.setProjectId(123);
+      assert(this.form.isValid());
     }
   });
 });
