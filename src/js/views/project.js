@@ -1,13 +1,13 @@
 define([
   'lib/maria',
-  'templates/project_item',
+  'templates/project',
   'route_helper'
-], function(maria, ProjectItemTemplate, RouteHelper) {
+], function(maria, ProjectTemplate, RouteHelper) {
   var namespace = {};
 
-  maria.ElementView.subclass(namespace, 'ProjectItemView', {
+  maria.ElementView.subclass(namespace, 'ProjectView', {
     controllerConstructor: null,
-    template: ProjectItemTemplate.source,
+    template: ProjectTemplate.source,
     constructor: function() {
       maria.ElementView.apply(this, arguments);
       RouteHelper.mixin(this);
@@ -15,9 +15,7 @@ define([
     properties: {
       buildData: function() {
         var model = this.getModel();
-        var link = this.find('a');
-        link.innerHTML = model.getName();
-        link.setAttribute('href', this.urlFor('/projects/' + model.getId()));
+        this.find('span.name').innerHTML = model.getName();
       },
       update: function() {
         this.buildData();
@@ -25,5 +23,6 @@ define([
     }
   });
 
-  return namespace.ProjectItemView;
+  return namespace.ProjectView;
 });
+

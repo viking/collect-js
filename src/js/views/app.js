@@ -5,6 +5,7 @@ define([
   'models/form',
   'models/question',
   'views/projects',
+  'views/project',
   'views/admin/projects',
   'views/admin/project',
   'views/admin/forms',
@@ -12,7 +13,7 @@ define([
   'views/admin/questions',
   'controllers/app',
   'templates/app'
-], function(maria, ProjectsModel, ProjectModel, FormModel, QuestionModel, ProjectsView, AdminProjectsView, AdminProjectView, AdminFormsView, AdminFormView, AdminQuestionsView, AppController, AppTemplate) {
+], function(maria, ProjectsModel, ProjectModel, FormModel, QuestionModel, ProjectsView, ProjectView, AdminProjectsView, AdminProjectView, AdminFormsView, AdminFormView, AdminQuestionsView, AppController, AppTemplate) {
 
   var namespace = {};
 
@@ -40,6 +41,16 @@ define([
       },
       showProjects: function() {
         this._showProjects(false);
+      },
+      showProject: function(projectId) {
+        var self = this;
+        this._store.find('projects', parseInt(projectId), ProjectModel, {
+          success: function(project) {
+            self._startTransition();
+            self.appendChild(new ProjectView(project));
+            self._endTransition();
+          }
+        });
       },
       showAdminProjects: function() {
         this._showProjects(true);

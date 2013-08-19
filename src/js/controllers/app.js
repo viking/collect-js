@@ -18,6 +18,7 @@ define(['lib/maria'], function(maria) {
       _useAnchors: false,
 
       _routes: [
+        ['_project',       new RegExp('^/projects/(\\d+)$')],
         ['_adminProjects', new RegExp('^/admin/projects$')],
         ['_adminProject',  new RegExp('^/admin/projects/(\\d+)$')],
         ['_adminForm',     new RegExp('^/admin/forms/(\\d+)$')],
@@ -119,6 +120,10 @@ define(['lib/maria'], function(maria) {
 
       _projects: function() {
         this.getView().showProjects();
+      },
+
+      _project: function(projectId) {
+        this.getView().showProject(projectId);
       },
 
       _adminProjects: function() {

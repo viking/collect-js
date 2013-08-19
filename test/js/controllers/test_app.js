@@ -14,6 +14,7 @@ define([
       this.controller.setWindow(this.window);
       this.view = new AppView(null, this.controller);
       this.stub(this.view, 'showProjects');
+      this.stub(this.view, 'showProject');
       this.stub(this.view, 'showAdminProjects');
       this.stub(this.view, 'showAdminProject');
       this.stub(this.view, 'showAdminForm');
@@ -103,11 +104,18 @@ define([
         assert.calledOnce(this.view.showProjects);
       },
 
-      "form route": function() {
+      "admin form route": function() {
         this.controller.go('admin/forms/1');
         assert.calledOnce(this.window.history.pushState);
         assert.calledWith(this.window.history.pushState, {}, "", '/foo/admin/forms/1');
         assert.calledWith(this.view.showAdminForm, "1");
+      },
+
+      "project route": function() {
+        this.controller.go('projects/1');
+        assert.calledOnce(this.window.history.pushState);
+        assert.calledWith(this.window.history.pushState, {}, "", '/foo/projects/1');
+        assert.calledWith(this.view.showProject, "1");
       },
     }
   })

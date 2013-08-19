@@ -8,13 +8,14 @@ define([
   'models/questions',
   'models/question',
   'views/projects',
+  'views/project',
   'views/admin/projects',
   'views/admin/project',
   'views/admin/forms',
   'views/admin/form',
   'views/admin/questions',
   'views/app'
-], function(maria, LocalStore, ProjectsModel, ProjectModel, FormsModel, FormModel, QuestionsModel, QuestionModel, ProjectsView, AdminProjectsView, AdminProjectView, AdminFormsView, AdminFormView, AdminQuestionsView, AppView) {
+], function(maria, LocalStore, ProjectsModel, ProjectModel, FormsModel, FormModel, QuestionsModel, QuestionModel, ProjectsView, ProjectView, AdminProjectsView, AdminProjectView, AdminFormsView, AdminFormView, AdminQuestionsView, AppView) {
   buster.testCase('AppView', {
     setUp: function() {
       this.store = new LocalStore();
@@ -96,5 +97,15 @@ define([
       assert(this.view.childNodes[1] instanceof AdminQuestionsView);
       assert.calledWith(AdminQuestionsView.prototype.setFormId, 123);
     },
+
+    "showProject": function() {
+      var project = sinon.createStubInstance(ProjectModel);
+      project.getId.returns(123);
+      this.stub(this.store, 'find').yieldsTo('success', project);
+      this.view.showProject("123");
+
+      assert.calledWith(this.store.find, 'projects', 123, ProjectModel);
+      assert(this.view.childNodes[0] instanceof ProjectView);
+    }
   });
 });
