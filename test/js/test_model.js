@@ -5,7 +5,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
     return namespace.FooModel;
   }
 
-  buster.testCase('ModelHelper', {
+  buster.testCase('Model', {
     "setAttribute": function() {
       var klass = newSubclass();
       var model = new klass();
