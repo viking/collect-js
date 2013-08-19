@@ -1,8 +1,9 @@
 define([
   'lib/maria',
   'models/project',
-  'models/forms'
-], function(maria, ProjectModel, FormsModel) {
+  'models/forms',
+  'models/records'
+], function(maria, ProjectModel, FormsModel, RecordsModel) {
   buster.testCase("ProjectModel", {
     setUp: function() {
       this.project = new ProjectModel();
@@ -61,6 +62,12 @@ define([
       refute(this.project.isValid());
       this.project.setName('foo');
       assert(this.project.isValid());
-    }
+    },
+
+    "getRecords": function() {
+      var records = this.project.getRecords();
+      assert(records instanceof RecordsModel);
+      assert.same(records, this.project.getRecords());
+    },
   });
 });

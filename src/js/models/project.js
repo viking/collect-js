@@ -1,13 +1,15 @@
 define([
   'model',
-  'models/forms'
-], function(Model, FormsModel) {
+  'models/forms',
+  'models/records'
+], function(Model, FormsModel, RecordsModel) {
   var namespace = {};
 
   Model.subclass(namespace, 'ProjectModel', {
     attributeNames: ['id', 'name'],
     associations: {
-      forms: {type: 'hasMany', setModel: FormsModel, key: 'project_id'}
+      forms:   {type: 'hasMany', setModel: FormsModel, key: 'project_id'},
+      records: {type: 'hasMany', setModel: RecordsModel, key: 'project_id'},
     },
     properties: {
       validate: function() {
