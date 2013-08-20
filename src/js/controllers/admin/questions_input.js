@@ -11,8 +11,15 @@ define(['lib/maria', 'models/question'], function(maria, QuestionModel) {
         question.setType(values.type);
         question.setPrompt(values.prompt);
         question.setFormId(values.form_id);
-        this.getModel().add(question);
-        view.reset();
+
+        maria.on(question, 'validate', this.getModel(), 'onValidateQuestion');
+        if (question.isValid()) {
+          this.getModel().add(question);
+          view.reset();
+        }
+        else {
+          view.displayErrors(question.getErrors());
+        }
       }
     }
   });
