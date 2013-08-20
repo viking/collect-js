@@ -9,8 +9,15 @@ define(['lib/maria', 'models/form'], function(maria, FormModel) {
         var form = new FormModel();
         form.setName(values.name);
         form.setProjectId(values.project_id);
-        this.getModel().add(form);
-        view.reset();
+
+        maria.on(form, 'validate', this.getModel(), 'onValidateForm');
+        if (form.isValid()) {
+          this.getModel().add(form);
+          view.reset();
+        }
+        else {
+          view.displayErrors(form.getErrors());
+        }
       }
     }
   });
