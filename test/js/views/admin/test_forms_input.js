@@ -7,12 +7,12 @@ define(['models/forms', 'views/admin/forms_input'], function(FormsModel, AdminFo
 
     "get values": function() {
       this.view.setProjectId(123);
-      this.view.find('input').value = 'foo';
+      this.view.find('input.name').value = 'foo';
       assert.equals(this.view.getValues(), {name:'foo',project_id:123});
     },
 
     "reset dialog": function() {
-      var input = this.view.find('input');
+      var input = this.view.find('input.name');
       input.value = 'foo';
 
       this.view.reset();
