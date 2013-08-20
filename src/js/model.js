@@ -123,16 +123,32 @@ define(['lib/maria', 'util'], function(maria, util) {
         var getterName = 'get' + util.capitalize(associationName);
         var variableName = '_' + associationName;
         var config = options.associations[associationName];
-        var setModel = config.setModel;
 
-        (function(variableName, setModel) {
-          properties[getterName] = function() {
-            if (!this[variableName]) {
-              this[variableName] = new setModel();
-            }
-            return this[variableName];
-          }
-        })(variableName, setModel);
+        switch (config.type) {
+          case 'hasMany':
+            var setModel = config.setModel;
+            (function(variableName, setModel) {
+              properties[getterName] = function() {
+                if (!this[variableName]) {
+                  this[variableName] = new setModel();
+                }
+                return this[variableName];
+              }
+            })(variableName, setModel);
+            break;
+          case 'hasOne':
+            var setterName = 'set' + util.capitalize(associationName);
+            (function(variableName) {
+              properties[getterName] = function() {
+                return this[variableName];
+              };
+              properties[setterName] = function(model) {
+                this[variableName] = model;
+              };
+            })(variableName);
+            properties[variableName] = null;
+            break;
+        }
       }
     }
     if (options.attributeNames) {

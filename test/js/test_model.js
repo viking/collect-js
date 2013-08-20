@@ -81,7 +81,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
       var setModel = this.spy();
       var options = {
         associations: {
-          bars: {type: 'hasMany', setModel: setModel, key: 'foo_id'}
+          bars: {type: 'hasMany', setModel: setModel}
         }
       };
       var klass = newSubclass(options);
@@ -89,6 +89,24 @@ require(['lib/maria', 'model'], function(maria, Model) {
 
       var foo = new klass();
       var bars = foo.getBars();
+    },
+
+    "subclass with hasOne association": function() {
+      var modelConstructor = function() { };
+      var options = {
+        associations: {
+          bar: {type: 'hasOne'}
+        }
+      };
+      var klass = newSubclass(options);
+      assert.equals(klass.associations, options.associations);
+
+      var foo = new klass();
+      assert.equals(foo.getBar(), null);
+
+      var bar = new modelConstructor();
+      foo.setBar(bar);
+      assert.same(foo.getBar(), bar);
     },
 
     "attribute names": function() {
