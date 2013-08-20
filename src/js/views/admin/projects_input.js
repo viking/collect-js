@@ -1,14 +1,14 @@
 define([
   'lib/maria',
-  'controllers/admin/projects_form',
-  'templates/admin/projects_form',
+  'controllers/admin/projects_input',
+  'templates/admin/projects_input',
   'route_helper'
-], function(maria, AdminProjectsFormController, AdminProjectsFormTemplate, RouteHelper) {
+], function(maria, AdminProjectsInputController, AdminProjectsInputTemplate, RouteHelper) {
   var namespace = {};
 
-  maria.ElementView.subclass(namespace, 'AdminProjectsFormView', {
-    controllerConstructor: AdminProjectsFormController,
-    template: AdminProjectsFormTemplate.source,
+  maria.ElementView.subclass(namespace, 'AdminProjectsInputView', {
+    controllerConstructor: AdminProjectsInputController,
+    template: AdminProjectsInputTemplate.source,
     constructor: function() {
       maria.ElementView.apply(this, arguments);
       RouteHelper.mixin(this);
@@ -38,5 +38,5 @@ define([
     }
   });
 
-  return namespace.AdminProjectsFormView;
+  return namespace.AdminProjectsInputView;
 });

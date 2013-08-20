@@ -1,8 +1,8 @@
-define(['models/forms', 'views/admin/forms_form'], function(FormsModel, AdminFormsFormView) {
-  buster.testCase('AdminFormsFormView', {
+define(['models/forms', 'views/admin/forms_input'], function(FormsModel, AdminFormsInputView) {
+  buster.testCase('AdminFormsInputView', {
     setUp: function() {
       this.forms = new FormsModel();
-      this.view = new AdminFormsFormView(this.forms);
+      this.view = new AdminFormsInputView(this.forms);
     },
 
     "get values": function() {

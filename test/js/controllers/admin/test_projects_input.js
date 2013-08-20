@@ -1,14 +1,14 @@
 define([
   'models/projects',
   'models/project',
-  'views/admin/projects_form',
-  'controllers/admin/projects_form'
-], function(ProjectsModel, ProjectModel, AdminProjectsFormView, AdminProjectsFormController) {
-  buster.testCase('AdminProjectsFormController', {
+  'views/admin/projects_input',
+  'controllers/admin/projects_input'
+], function(ProjectsModel, ProjectModel, AdminProjectsInputView, AdminProjectsInputController) {
+  buster.testCase('AdminProjectsInputController', {
     setUp: function() {
       this.model = new ProjectsModel();
-      this.controller = new AdminProjectsFormController();
-      this.view = new AdminProjectsFormView(this.model, this.controller);
+      this.controller = new AdminProjectsInputController();
+      this.view = new AdminProjectsInputView(this.model, this.controller);
     },
 
     "on submit": function() {

@@ -1,8 +1,8 @@
-define(['models/questions', 'views/admin/questions_form'], function(QuestionsModel, AdminQuestionsFormView) {
-  buster.testCase('AdminQuestionsFormView', {
+define(['models/questions', 'views/admin/questions_input'], function(QuestionsModel, AdminQuestionsInputView) {
+  buster.testCase('AdminQuestionsInputView', {
     setUp: function() {
       this.questions = new QuestionsModel();
-      this.view = new AdminQuestionsFormView(this.questions);
+      this.view = new AdminQuestionsInputView(this.questions);
     },
 
     "get values": function() {

@@ -7,7 +7,7 @@ define(['models/projects', 'views/admin/projects'], function(ProjectsModel, Admi
 
     "has list and form as children": function() {
       assert(this.view.find('ul.projects'));
-      assert(this.view.find('section.projects-form'));
+      assert(this.view.find('section.projects-input'));
     }
   });
 });

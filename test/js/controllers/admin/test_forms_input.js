@@ -1,13 +1,13 @@
 define([
   'models/forms',
-  'views/admin/forms_form',
-  'controllers/admin/forms_form'
-], function(FormsModel, AdminFormsFormView, AdminFormsFormController) {
-  buster.testCase('AdminFormsFormController', {
+  'views/admin/forms_input',
+  'controllers/admin/forms_input'
+], function(FormsModel, AdminFormsInputView, AdminFormsInputController) {
+  buster.testCase('AdminFormsInputController', {
     setUp: function() {
       this.model = new FormsModel();
-      this.controller = new AdminFormsFormController();
-      this.view = new AdminFormsFormView(this.model, this.controller);
+      this.controller = new AdminFormsInputController();
+      this.view = new AdminFormsInputView(this.model, this.controller);
       this.view.setProjectId(123);
     },
 

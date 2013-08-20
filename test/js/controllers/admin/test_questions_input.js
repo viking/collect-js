@@ -1,13 +1,13 @@
 define([
   'models/questions',
-  'views/admin/questions_form',
-  'controllers/admin/questions_form'
-], function(QuestionsModel, AdminQuestionsFormView, AdminQuestionsFormController) {
-  buster.testCase('AdminQuestionsFormController', {
+  'views/admin/questions_input',
+  'controllers/admin/questions_input'
+], function(QuestionsModel, AdminQuestionsInputView, AdminQuestionsInputController) {
+  buster.testCase('AdminQuestionsInputController', {
     setUp: function() {
       this.model = new QuestionsModel();
-      this.controller = new AdminQuestionsFormController();
-      this.view = new AdminQuestionsFormView(this.model, this.controller);
+      this.controller = new AdminQuestionsInputController();
+      this.view = new AdminQuestionsInputView(this.model, this.controller);
       this.view.setFormId(123);
     },
 

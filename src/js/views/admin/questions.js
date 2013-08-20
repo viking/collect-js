@@ -2,9 +2,9 @@ define([
   'lib/maria',
   'templates/admin/questions',
   'views/admin/questions_list',
-  'views/admin/questions_form',
+  'views/admin/questions_input',
   'route_helper'
-], function(maria, AdminQuestionsTemplate, AdminQuestionsListView, AdminQuestionsFormView, RouteHelper) {
+], function(maria, AdminQuestionsTemplate, AdminQuestionsListView, AdminQuestionsInputView, RouteHelper) {
   var namespace = {};
 
   maria.ElementView.subclass(namespace, 'AdminQuestionsView', {
@@ -16,14 +16,14 @@ define([
 
       this._listView = new AdminQuestionsListView(model);
       this.appendChild(this._listView);
-      this._formView = new AdminQuestionsFormView(model);
-      this.appendChild(this._formView);
+      this._inputView = new AdminQuestionsInputView(model);
+      this.appendChild(this._inputView);
     },
     properties: {
       _listView: null,
-      _formView: null,
+      _inputView: null,
       setFormId: function(formId) {
-        this._formView.setFormId(formId);
+        this._inputView.setFormId(formId);
       }
     }
   });

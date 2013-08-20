@@ -1,9 +1,9 @@
 define([
   'models/forms',
   'views/admin/forms_list',
-  'views/admin/forms_form',
+  'views/admin/forms_input',
   'views/admin/forms'
-], function(FormsModel, AdminFormsListView, AdminFormsFormView, AdminFormsView) {
+], function(FormsModel, AdminFormsListView, AdminFormsInputView, AdminFormsView) {
   buster.testCase('AdminFormsView', {
     setUp: function() {
       this.forms = new FormsModel();
@@ -12,14 +12,14 @@ define([
 
     "has list and form as children": function() {
       assert(this.view.childNodes[0] instanceof AdminFormsListView);
-      assert(this.view.childNodes[1] instanceof AdminFormsFormView);
+      assert(this.view.childNodes[1] instanceof AdminFormsInputView);
     },
 
     "setting project id": function() {
-      var formView = this.view.childNodes[1];
-      this.stub(formView, 'setProjectId');
+      var inputView = this.view.childNodes[1];
+      this.stub(inputView, 'setProjectId');
       this.view.setProjectId(123);
-      assert.calledWith(formView.setProjectId, 123);
+      assert.calledWith(inputView.setProjectId, 123);
     }
   });
 });

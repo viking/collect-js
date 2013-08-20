@@ -1,7 +1,7 @@
 define(['lib/maria', 'models/question'], function(maria, QuestionModel) {
   var namespace = {};
 
-  maria.Controller.subclass(namespace, 'AdminQuestionsFormController', {
+  maria.Controller.subclass(namespace, 'AdminQuestionsInputController', {
     properties: {
       onSubmit: function() {
         var view = this.getView();
@@ -17,5 +17,5 @@ define(['lib/maria', 'models/question'], function(maria, QuestionModel) {
     }
   });
 
-  return namespace.AdminQuestionsFormController;
+  return namespace.AdminQuestionsInputController;
 });
