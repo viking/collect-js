@@ -11,6 +11,16 @@ require([
       this.stub(question, 'validatesUnique');
       question.isValid();
       assert.calledWith(question.validatesUnique, 'name', questions);
+    },
+
+    'validates question id uniqueness': function() {
+      var question = new QuestionModel();
+      var questions = new QuestionsModel();
+      questions.add(question);
+
+      this.stub(question, 'validatesUnique');
+      question.isValid();
+      assert.calledWith(question.validatesUnique, 'id', questions);
     }
   });
 });

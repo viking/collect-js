@@ -11,6 +11,16 @@ require([
       this.stub(project, 'validatesUnique');
       project.isValid();
       assert.calledWith(project.validatesUnique, 'name', projects);
+    },
+
+    'validates project id uniqueness': function() {
+      var project = new ProjectModel();
+      var projects = new ProjectsModel();
+      projects.add(project);
+
+      this.stub(project, 'validatesUnique');
+      project.isValid();
+      assert.calledWith(project.validatesUnique, 'id', projects);
     }
   });
 });

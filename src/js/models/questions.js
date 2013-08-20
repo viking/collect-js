@@ -9,6 +9,7 @@ define(['lib/maria'], function(maria) {
     properties: {
       onValidateQuestion: function(evt) {
         var question = evt.target;
+        question.validatesUnique('id', this);
         question.validatesUnique('name', this);
       }
     }
