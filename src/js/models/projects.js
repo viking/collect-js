@@ -1,4 +1,7 @@
-define(['lib/maria'], function(maria) {
+define([
+  'lib/maria',
+  'models/project'
+], function(maria, ProjectModel) {
   var namespace = {};
 
   maria.SetModel.subclass(namespace, 'ProjectsModel', {
@@ -8,9 +11,14 @@ define(['lib/maria'], function(maria) {
     },
     properties: {
       onValidateProject: function(evt) {
-        var project = evt.target;
-        project.validatesUnique('id', this);
-        project.validatesUnique('name', this);
+        var obj = evt.target;
+        if (obj instanceof ProjectModel) {
+          obj.validatesUnique('id', this);
+          obj.validatesUnique('name', this);
+        }
+        else {
+          obj.addError('base', 'is not a ProjectModel');
+        }
       }
     }
   });

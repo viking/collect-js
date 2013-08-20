@@ -1,4 +1,7 @@
-define(['lib/maria'], function(maria) {
+define([
+  'lib/maria',
+  'models/form'
+], function(maria, FormModel) {
   var namespace = {};
 
   maria.SetModel.subclass(namespace, 'FormsModel', {
@@ -8,9 +11,14 @@ define(['lib/maria'], function(maria) {
     },
     properties: {
       onValidateForm: function(evt) {
-        var form = evt.target;
-        form.validatesUnique('id', this);
-        form.validatesUnique('name', this);
+        var obj = evt.target;
+        if (obj instanceof FormModel) {
+          obj.validatesUnique('id', this);
+          obj.validatesUnique('name', this);
+        }
+        else {
+          obj.addError('base', 'is not a FormModel');
+        }
       }
     }
   });

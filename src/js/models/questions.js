@@ -1,4 +1,7 @@
-define(['lib/maria'], function(maria) {
+define([
+  'lib/maria',
+  'models/question'
+], function(maria, QuestionModel) {
   var namespace = {};
 
   maria.SetModel.subclass(namespace, 'QuestionsModel', {
@@ -8,9 +11,14 @@ define(['lib/maria'], function(maria) {
     },
     properties: {
       onValidateQuestion: function(evt) {
-        var question = evt.target;
-        question.validatesUnique('id', this);
-        question.validatesUnique('name', this);
+        var obj = evt.target;
+        if (obj instanceof QuestionModel) {
+          obj.validatesUnique('id', this);
+          obj.validatesUnique('name', this);
+        }
+        else {
+          obj.addError('base', 'is not a QuestionModel');
+        }
       }
     }
   });

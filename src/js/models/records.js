@@ -1,4 +1,7 @@
-define(['lib/maria'], function(maria) {
+define([
+  'lib/maria',
+  'models/record'
+], function(maria, RecordModel) {
   var namespace = {};
 
   maria.SetModel.subclass(namespace, 'RecordsModel', {
@@ -8,9 +11,13 @@ define(['lib/maria'], function(maria) {
     },
     properties: {
       onValidateRecord: function(evt) {
-        var record = evt.target;
-        record.validatesUnique('id', this);
-        record.validatesUnique('name', this);
+        var obj = evt.target;
+        if (obj instanceof RecordModel) {
+          obj.validatesUnique('id', this);
+        }
+        else {
+          obj.addError('base', 'is not a RecordModel');
+        }
       }
     }
   });
