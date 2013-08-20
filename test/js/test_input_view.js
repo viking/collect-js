@@ -11,7 +11,7 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
         template: '<div>' +
             '<input name="foo"/>' +
             '<input name="bar"/>' +
-            '<input name="blargh" type="hidden" />' +
+            '<input name="blargh" type="hidden" value="foo" />' +
             '<select name="baz">' +
               '<option>qux</option>' +
               '<option>corge</option>' +
@@ -44,15 +44,16 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
     },
 
     "reset": function() {
-      var input = this.view.find('input');
-      input.value = 'foo';
+      var inputs = this.view.findAll('input');
+      inputs[0].value = 'foo';
       var select = this.view.find('select');
       select.selectedIndex = 1;
       var textarea = this.view.find('textarea');
       textarea.value = 'junk';
 
       this.view.reset();
-      assert.equals(input.value, '');
+      assert.equals(inputs[0].value, '');
+      assert.equals(inputs[2].value, 'foo');
       assert.equals(select.selectedIndex, 0);
       assert.equals(textarea.value, '');
       assert.equals(this.view.find('input.submit').value, "Go");

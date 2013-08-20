@@ -10,51 +10,34 @@ define([
       RouteHelper.mixin(this);
     },
     properties: {
+      buildTemplate: function() {
+        maria.ElementView.prototype.buildTemplate.apply(this, arguments);
+        this._originalValues = this._getValues(false);
+      },
+
       getValues: function() {
-        var values = {};
-
-        var inputs = this._findAllInputs();
-        for (var i = 0; i < inputs.length; i++) {
-          var input = inputs[i];
-          if (input.getAttribute('name') != null) {
-            values[input.getAttribute('name')] = input.value;
-          }
-        }
-
-        var selects = this.findAll('select');
-        for (var i = 0; i < selects.length; i++) {
-          var select = selects[i];
-          if (select.getAttribute('name') != null) {
-            var option = select.options[select.selectedIndex];
-            values[select.getAttribute('name')] = option ? option.value : null;
-          }
-        }
-
-        return values;
+        return this._getValues(true);
       },
 
       reset: function() {
-        var inputs = this._findAllInputs();
-        for (var i = 0; i < inputs.length; i++) {
-          var type = inputs[i].getAttribute('type');
-          if (type != 'submit' && type != 'button') {
-            inputs[i].value = '';
-            this._removeErrorClass(inputs[i]);
+        var elements = this._findAllFormElements();
+        for (var i = 0; i < elements.length; i++) {
+          var element = elements[i];
+          var name = element.getAttribute('name');
+          if (name != null) {
+            if (element.tagName == 'SELECT') {
+              element.selectedIndex = this._originalValues[name];
+            }
+            else {
+              element.value = this._originalValues[name];
+            }
+            this._removeErrorClass(element);
           }
-        }
-
-        var selects = this.findAll('select');
-        for (var i = 0; i < selects.length; i++) {
-          selects[i].selectedIndex = 0;
-          this._removeErrorClass(selects[i]);
         }
       },
 
       displayErrors: function(errors) {
-        var elements = this._findAllInputs();
-        var selects = this.findAll('select');
-        elements.push.apply(elements, selects);
-
+        var elements = this._findAllFormElements();
         for (var i = 0; i < elements.length; i++) {
           var name = elements[i].getAttribute('name');
           if (name && errors.hasOwnProperty(name)) {
@@ -63,11 +46,14 @@ define([
         }
       },
 
-      _findAllInputs: function() {
-        var inputs = this.findAll('input');
+      _findAllFormElements: function() {
+        var elements = this.findAll('input');
         var textareas = this.findAll('textarea');
-        inputs.push.apply(inputs, textareas);
-        return inputs;
+        elements.push.apply(elements, textareas);
+        var selects = this.findAll('select');
+        elements.push.apply(elements, selects);
+
+        return elements;
       },
 
       _addErrorClass: function(elt) {
@@ -86,6 +72,30 @@ define([
         if (classAttr) {
           elt.setAttribute('class', classAttr.replace(/ *error */, ''));
         }
+      },
+
+      _getValues: function(useOptionValues) {
+        var values = {};
+        var elements = this._findAllFormElements();
+        for (var i = 0; i < elements.length; i++) {
+          var element = elements[i];
+          var name = element.getAttribute('name');
+          if (name != null) {
+            if (element.tagName == 'SELECT') {
+              if (useOptionValues) {
+                var option = element.options[element.selectedIndex];
+                values[name] = option ? option.value : null;
+              }
+              else {
+                values[name] = element.selectedIndex;
+              }
+            }
+            else {
+              values[name] = element.value;
+            }
+          }
+        }
+        return values;
       }
     }
   });
