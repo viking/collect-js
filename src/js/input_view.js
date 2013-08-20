@@ -12,11 +12,15 @@ define([
     properties: {
       buildTemplate: function() {
         maria.ElementView.prototype.buildTemplate.apply(this, arguments);
-        this._originalValues = this._getValues(false);
+        this._savedValues = this._getValues(false);
       },
 
       getValues: function() {
         return this._getValues(true);
+      },
+
+      saveValues: function() {
+        this._savedValues = this._getValues(false);
       },
 
       reset: function() {
@@ -26,10 +30,10 @@ define([
           var name = element.getAttribute('name');
           if (name != null) {
             if (element.tagName == 'SELECT') {
-              element.selectedIndex = this._originalValues[name];
+              element.selectedIndex = this._savedValues[name];
             }
             else {
-              element.value = this._originalValues[name];
+              element.value = this._savedValues[name];
             }
             this._removeErrorClass(element);
           }

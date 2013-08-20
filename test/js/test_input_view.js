@@ -60,11 +60,12 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
       assert.equals(this.view.find('input.button').value, "Stop");
     },
 
-    "display errors": function() {
-      this.view.displayErrors({foo: ['error 1'], baz: ['error 2'], grault: ['error 3']});
-      assert.equals(this.view.find('input').getAttribute('class'), 'error');
-      assert.equals(this.view.find('select').getAttribute('class'), 'error');
-      assert.equals(this.view.find('textarea').getAttribute('class'), 'error');
+    "save values for resets": function() {
+      var input = this.view.find('input');
+      input.value = 'foo';
+      this.view.saveValues();
+      this.view.reset();
+      assert.equals(input.value, 'foo');
     },
 
     "reset clears errors": function() {
@@ -73,12 +74,19 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
       refute(this.view.find('.error'));
     },
 
+    "display errors": function() {
+      this.view.displayErrors({foo: ['error 1'], baz: ['error 2'], grault: ['error 3']});
+      assert.equals(this.view.find('input').getAttribute('class'), 'error');
+      assert.equals(this.view.find('select').getAttribute('class'), 'error');
+      assert.equals(this.view.find('textarea').getAttribute('class'), 'error');
+    },
+
     "don't double add error class": function() {
       this.view.displayErrors({foo: ['error 1'], baz: ['error 2'], grault: ['error 3']});
       this.view.displayErrors({foo: ['error 1'], baz: ['error 2'], grault: ['error 3']});
       assert.equals(this.view.find('input').getAttribute('class'), 'error');
       assert.equals(this.view.find('select').getAttribute('class'), 'error');
       assert.equals(this.view.find('textarea').getAttribute('class'), 'error');
-    }
+    },
   })
 });
