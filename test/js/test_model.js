@@ -109,7 +109,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
       assert.same(foo.getBar(), bar);
     },
 
-    "hasOne association validates class": function() {
+    "hasOne association requires proper class": function() {
       var modelConstructor = function() { };
       var options = {
         associations: {

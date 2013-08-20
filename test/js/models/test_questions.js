@@ -25,14 +25,22 @@ require([
       assert.calledWith(question.validatesUnique, 'id', questions);
     },
 
-    'validate child class': function() {
+    'validating invalid object': function() {
       var questions = new QuestionsModel();
       var model = new Model();
       maria.on(model, 'validate', questions, 'onValidateQuestion');
 
-      this.stub(model, 'addError');
-      model.isValid();
-      assert.calledWith(model.addError, 'base', 'is not a QuestionModel');
+      assert.exception(function() {
+        model.isValid();
+      });
+    },
+
+    'adding invalid object': function() {
+      var questions = new QuestionsModel();
+      var model = new Model();
+      assert.exception(function() {
+        questions.add(model);
+      });
     }
   });
 });

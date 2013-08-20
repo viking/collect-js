@@ -10,6 +10,15 @@ define([
       maria.on(this, 'validate', this, 'onValidateForm');
     },
     properties: {
+      add: function() {
+        for (var i = 0; i < arguments.length; i++) {
+          if (!(arguments[i] instanceof FormModel)) {
+            throw('object is not a FormModel');
+          }
+        }
+        maria.SetModel.prototype.add.apply(this, arguments);
+      },
+
       onValidateForm: function(evt) {
         var obj = evt.target;
         if (obj instanceof FormModel) {
@@ -17,7 +26,7 @@ define([
           obj.validatesUnique('name', this);
         }
         else {
-          obj.addError('base', 'is not a FormModel');
+          throw('object is not a FormModel');
         }
       }
     }

@@ -10,13 +10,22 @@ define([
       maria.on(this, 'validate', this, 'onValidateRecord');
     },
     properties: {
+      add: function() {
+        for (var i = 0; i < arguments.length; i++) {
+          if (!(arguments[i] instanceof RecordModel)) {
+            throw('object is not a RecordModel');
+          }
+        }
+        maria.SetModel.prototype.add.apply(this, arguments);
+      },
+
       onValidateRecord: function(evt) {
         var obj = evt.target;
         if (obj instanceof RecordModel) {
           obj.validatesUnique('id', this);
         }
         else {
-          obj.addError('base', 'is not a RecordModel');
+          throw('object is not a RecordModel');
         }
       }
     }

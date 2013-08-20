@@ -152,7 +152,7 @@ define([
     },
 
     "findAll with filter": function(done) {
-      var setModel = new ProjectsModel();
+      var setModel = new FormsModel();
       localStorage['forms'] = '[{"id":1,"name":"foo","project_id":1},{"id":2,"name":"bar","project_id":1},{"id":3,"name":"baz","project_id":2}]';
       this.store.findAll('forms', setModel, FormModel, {
         filter: {project_id: 1},

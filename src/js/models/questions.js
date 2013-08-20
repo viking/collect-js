@@ -10,6 +10,15 @@ define([
       maria.on(this, 'validate', this, 'onValidateQuestion');
     },
     properties: {
+      add: function() {
+        for (var i = 0; i < arguments.length; i++) {
+          if (!(arguments[i] instanceof QuestionModel)) {
+            throw('object is not a QuestionModel');
+          }
+        }
+        maria.SetModel.prototype.add.apply(this, arguments);
+      },
+
       onValidateQuestion: function(evt) {
         var obj = evt.target;
         if (obj instanceof QuestionModel) {
@@ -17,7 +26,7 @@ define([
           obj.validatesUnique('name', this);
         }
         else {
-          obj.addError('base', 'is not a QuestionModel');
+          throw('object is not a QuestionModel');
         }
       }
     }

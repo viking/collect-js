@@ -25,14 +25,23 @@ require([
       assert.calledWith(form.validatesUnique, 'id', forms);
     },
 
-    'validate child class': function() {
+    'validating invalid object': function() {
       var forms = new FormsModel();
       var model = new Model();
       maria.on(model, 'validate', forms, 'onValidateForm');
 
       this.stub(model, 'addError');
-      model.isValid();
-      assert.calledWith(model.addError, 'base', 'is not a FormModel');
+      assert.exception(function() {
+        model.isValid();
+      });
+    },
+
+    'adding invalid object': function() {
+      var forms = new FormsModel();
+      var model = new Model();
+      assert.exception(function() {
+        forms.add(model);
+      });
     }
   });
 });

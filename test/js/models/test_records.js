@@ -15,14 +15,22 @@ require([
       assert.calledWith(record.validatesUnique, 'id', records);
     },
 
-    'validate child class': function() {
+    'validating invalid object': function() {
       var records = new RecordsModel();
       var model = new Model();
       maria.on(model, 'validate', records, 'onValidateRecord');
 
-      this.stub(model, 'addError');
-      model.isValid();
-      assert.calledWith(model.addError, 'base', 'is not a RecordModel');
+      assert.exception(function() {
+        model.isValid();
+      });
+    },
+
+    'adding invalid object': function() {
+      var records = new RecordsModel();
+      var model = new Model();
+      assert.exception(function() {
+        records.add(model);
+      });
     }
   });
 });

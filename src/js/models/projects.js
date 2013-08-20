@@ -10,6 +10,15 @@ define([
       maria.on(this, 'validate', this, 'onValidateProject');
     },
     properties: {
+      add: function() {
+        for (var i = 0; i < arguments.length; i++) {
+          if (!(arguments[i] instanceof ProjectModel)) {
+            throw('object is not a ProjectModel');
+          }
+        }
+        maria.SetModel.prototype.add.apply(this, arguments);
+      },
+
       onValidateProject: function(evt) {
         var obj = evt.target;
         if (obj instanceof ProjectModel) {
@@ -17,7 +26,7 @@ define([
           obj.validatesUnique('name', this);
         }
         else {
-          obj.addError('base', 'is not a ProjectModel');
+          throw('object is not a ProjectModel');
         }
       }
     }
