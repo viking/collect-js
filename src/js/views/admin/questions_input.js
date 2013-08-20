@@ -1,9 +1,8 @@
 define([
   'input_view',
   'controllers/admin/questions_input',
-  'templates/admin/questions_input',
-  'route_helper',
-], function(InputView, AdminQuestionsInputController, AdminQuestionsInputTemplate, RouteHelper) {
+  'templates/admin/questions_input'
+], function(InputView, AdminQuestionsInputController, AdminQuestionsInputTemplate) {
   var namespace = {};
 
   InputView.subclass(namespace, 'AdminQuestionsInputView', {
