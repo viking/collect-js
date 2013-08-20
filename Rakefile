@@ -92,7 +92,7 @@ task :test => ['phantomjs:start', 'test:buster']
 task :default => :test
 
 namespace :test do
-  task :buster => ['buster:start', 'templates:build'] do
+  task :buster => [node_package('buster-amd'), 'buster:start', 'templates:build'] do
     buster_test = get_path('buster', 'bin/buster-test')
     ENV['NODE_PATH'] = 'vendor/node_modules'
     system(buster_test)
