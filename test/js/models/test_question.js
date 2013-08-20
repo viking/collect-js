@@ -97,6 +97,62 @@ define(['lib/maria', 'models/question'], function(maria, QuestionModel) {
       assert.equals(this.question.getAttributes(), {
         id: 1, name: "foo", type: "text", prompt: "Foo:", form_id: 1
       })
+    },
+
+    "requires name": function() {
+      this.question.setType("text");
+      this.question.setPrompt("Foo:");
+      this.question.setFormId(1);
+      refute(this.question.isValid());
+      this.question.setName("foo");
+      assert(this.question.isValid());
+    },
+
+    "requires name string": function() {
+      this.question.setName(123);
+      this.question.setType("text");
+      this.question.setPrompt("Foo:");
+      this.question.setFormId(1);
+      refute(this.question.isValid());
+      this.question.setName("foo");
+      assert(this.question.isValid());
+    },
+
+    "requires name format": function() {
+      this.question.setName("foo bar");
+      this.question.setType("text");
+      this.question.setPrompt("Foo:");
+      this.question.setFormId(1);
+      refute(this.question.isValid());
+      this.question.setName("foo");
+      assert(this.question.isValid());
+    },
+
+    "requires type": function() {
+      this.question.setName("foo");
+      this.question.setPrompt("Foo:");
+      this.question.setFormId(1);
+      refute(this.question.isValid());
+      this.question.setType("text");
+      assert(this.question.isValid());
+    },
+
+    "requires prompt": function() {
+      this.question.setName("foo");
+      this.question.setType("text");
+      this.question.setFormId(1);
+      refute(this.question.isValid());
+      this.question.setPrompt("Foo:");
+      assert(this.question.isValid());
+    },
+
+    "requires form_id": function() {
+      this.question.setName("foo");
+      this.question.setType("text");
+      this.question.setPrompt("Foo:");
+      refute(this.question.isValid());
+      this.question.setFormId(1);
+      assert(this.question.isValid());
     }
   });
 });
