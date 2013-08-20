@@ -95,7 +95,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
       var modelConstructor = function() { };
       var options = {
         associations: {
-          bar: {type: 'hasOne'}
+          bar: {type: 'hasOne', modelConstructor: modelConstructor}
         }
       };
       var klass = newSubclass(options);
@@ -107,6 +107,25 @@ require(['lib/maria', 'model'], function(maria, Model) {
       var bar = new modelConstructor();
       foo.setBar(bar);
       assert.same(foo.getBar(), bar);
+    },
+
+    "hasOne association validates class": function() {
+      var modelConstructor = function() { };
+      var options = {
+        associations: {
+          bar: {type: 'hasOne', modelConstructor: modelConstructor}
+        }
+      };
+      var klass = newSubclass(options);
+      assert.equals(klass.associations, options.associations);
+
+      var foo = new klass();
+      assert.equals(foo.getBar(), null);
+
+      var obj = new (function() {})();
+      assert.exception(function() {
+        foo.setBar(obj);
+      });
     },
 
     "attribute names": function() {

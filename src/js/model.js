@@ -138,14 +138,20 @@ define(['lib/maria', 'util'], function(maria, util) {
             break;
           case 'hasOne':
             var setterName = 'set' + util.capitalize(associationName);
-            (function(variableName) {
+            var constructor = config.modelConstructor;
+            (function(variableName, constructor) {
               properties[getterName] = function() {
                 return this[variableName];
               };
               properties[setterName] = function(model) {
-                this[variableName] = model;
+                if (model instanceof constructor) {
+                  this[variableName] = model;
+                }
+                else {
+                  throw("model is not an instance of the specified constructor");
+                }
               };
-            })(variableName);
+            })(variableName, constructor);
             properties[variableName] = null;
             break;
         }
