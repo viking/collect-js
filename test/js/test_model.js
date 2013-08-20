@@ -133,49 +133,58 @@ require(['lib/maria', 'model'], function(maria, Model) {
     },
 
     "validate presence": function() {
+      var result;
       var klass = newSubclass({
         properties: {
           validate: function() {
-            this.validatesPresence('foo');
+            result = this.validatesPresence('foo');
           }
         }
       });
       var model = new klass();
       refute(model.isValid());
+      refute(result);
       assert.equals(model.getErrors(), {foo: ['is required']});
       model.setAttribute('foo', 123);
       assert(model.isValid());
+      assert(result);
     },
 
     "validate presence rejects empty string": function() {
+      var result;
       var klass = newSubclass({
         properties: {
           validate: function() {
-            this.validatesPresence('foo');
+            result = this.validatesPresence('foo');
           }
         }
       });
       var model = new klass();
       model.setAttribute('foo', '');
       refute(model.isValid());
+      refute(result);
       assert.equals(model.getErrors(), {foo: ['is required']});
       model.setAttribute('foo', 123);
       assert(model.isValid());
+      assert(result);
     },
 
     "validate type": function() {
+      var result;
       var klass = newSubclass({
         properties: {
           validate: function() {
-            this.validatesType('foo', 'number');
+            result = this.validatesType('foo', 'number');
           }
         }
       });
       var model = new klass();
       model.setAttribute('foo', 'bar');
       refute(model.isValid());
+      refute(result);
       model.setAttribute('foo', 123);
       assert(model.isValid());
+      assert(result);
     },
 
     "dispatch validate event": function() {
@@ -189,6 +198,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
     },
 
     "validates unique": function() {
+      var result;
       var klass = newSubclass();
       var model_1 = new klass();
       model_1.setAttribute('foo', 'bar');
@@ -198,11 +208,37 @@ require(['lib/maria', 'model'], function(maria, Model) {
       setModel.add(model_1);
       setModel.add(model_2);
       maria.on(model_1, 'validate', function(evt) {
-        evt.target.validatesUnique('foo', setModel);
+        result = evt.target.validatesUnique('foo', setModel);
       });
       assert(model_1.isValid());
+      assert(result);
       model_1.setAttribute('foo', 'baz');
       refute(model_1.isValid());
+      refute(result);
     },
+
+    "validates format": function() {
+      var result;
+      var klass = newSubclass({
+        properties: {
+          validate: function() {
+            result = this.validatesFormat('foo', /^\w+$/);
+          }
+        }
+      });
+      var model = new klass();
+      model.setAttribute('foo', 'bar baz');
+      refute(model.isValid());
+      refute(result);
+      model.setAttribute('foo', 'bar');
+      assert(model.isValid());
+      assert(result);
+      model.setAttribute('foo', null);
+      assert(model.isValid());
+      assert(result);
+      model.setAttribute('foo', 123);
+      assert(model.isValid());
+      assert(result);
+    }
   });
 });

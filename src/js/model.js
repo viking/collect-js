@@ -79,13 +79,17 @@ define(['lib/maria', 'util'], function(maria, util) {
             this._attributes[attributeName] == null ||
             this._attributes[attributeName] == "") {
           this.addError(attributeName, 'is required');
+          return false;
         }
+        return true;
       },
 
       validatesType: function(attributeName, type) {
         if (typeof(this._attributes[attributeName]) != type) {
           this.addError(attributeName, 'must be of type "' + type + '"');
+          return false;
         }
+        return true;
       },
 
       validatesUnique: function(attributeName, set) {
@@ -94,8 +98,19 @@ define(['lib/maria', 'util'], function(maria, util) {
         set.forEach(function(model) {
           if (valid && model !== this && model.getAttribute(attributeName) == value) {
             this.addError(attributeName, 'is already taken');
+            valid = false;
           }
         }, this);
+        return valid;
+      },
+
+      validatesFormat: function(attributeName, pattern) {
+        var value = this._attributes[attributeName];
+        if (value && !value.toString().match(pattern)) {
+          this.addError(attributeName, 'is not in the correct format');
+          return false;
+        }
+        return true;
       }
     }
   });
