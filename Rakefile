@@ -139,7 +139,7 @@ end
 
 desc "Kill all node processes and remove PID files"
 task :killall do
-  system('killall node')
+  system('killall node phantomjs')
   FileUtils.rm(Dir.glob('tmp/pids/*.pid'), :verbose => true)
 end
 
