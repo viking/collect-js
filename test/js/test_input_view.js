@@ -8,7 +8,7 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
   buster.testCase('InputView', {
     setUp: function() {
       this.klass = newSubclass({
-        template: '<div><input name="foo"/><input name="bar"/><select name="baz"><option>qux</option><option>corge</option></select><textarea name="grault"></textarea><input class="submit" type="submit"/></div>'
+        template: '<div><input name="foo"/><input name="bar"/><input name="blargh" type="hidden" /><select name="baz"><option>qux</option><option>corge</option></select><textarea name="grault"></textarea><input class="submit" type="submit"/></div>'
       });
       this.view = new this.klass();
     },
@@ -17,10 +17,11 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
       var inputs = this.view.findAll('input');
       inputs[0].value = 'foo';
       inputs[1].value = 'bar';
+      inputs[2].value = 'stuff';
       this.view.find('select').selectedIndex = 1;
       this.view.find('textarea').value = "stuff goes here";
       assert.equals(this.view.getValues(), {
-        foo: 'foo', bar: 'bar', baz: 'corge',
+        foo: 'foo', bar: 'bar', blargh: 'stuff', baz: 'corge',
         grault: 'stuff goes here'
       });
     },

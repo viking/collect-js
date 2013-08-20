@@ -1,7 +1,14 @@
-define(['lib/maria'], function(maria) {
+define([
+  'lib/maria',
+  'route_helper'
+], function(maria, RouteHelper) {
   var ns = {};
 
   maria.ElementView.subclass(ns, 'InputView', {
+    constructor: function() {
+      maria.ElementView.apply(this, arguments);
+      RouteHelper.mixin(this);
+    },
     properties: {
       getValues: function() {
         var values = {};
