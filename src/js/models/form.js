@@ -13,6 +13,19 @@ define([
       validate: function() {
         this.validatesPresence('name');
         this.validatesPresence('project_id');
+      },
+
+      getRecordModelClass: function() {
+        var attributeNames = ['id'];
+        this.getQuestions().forEach(function(question) {
+          attributeNames.push(question.getName());
+        });
+
+        var namespace = {};
+        Model.subclass(namespace, 'FormRecordModel', {
+          attributeNames: attributeNames
+        });
+        return namespace.FormRecordModel;
       }
     }
   });

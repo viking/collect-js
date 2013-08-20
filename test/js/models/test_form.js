@@ -2,7 +2,8 @@ define([
   'lib/maria',
   'models/form',
   'models/questions',
-], function(maria, FormModel, QuestionsModel) {
+  'models/question',
+], function(maria, FormModel, QuestionsModel, QuestionModel) {
   buster.testCase("FormModel", {
     setUp: function() {
       this.form = new FormModel();
@@ -81,6 +82,35 @@ define([
       refute(this.form.isValid());
       this.form.setProjectId(123);
       assert(this.form.isValid());
+    },
+
+    "record model": {
+      setUp: function() {
+        this.form.setProjectId(123);
+        this.form.setName('foo');
+        this.form.setId(456);
+      },
+
+      "id attribute": function() {
+        var klass = this.form.getRecordModelClass();
+        var model = new klass();
+        model.setId(1);
+        assert.equals(model.getId(), 1);
+      },
+
+      "question attribute": function() {
+        var question = new QuestionModel();
+        question.setName('foo');
+        question.setType('text');
+        question.setPrompt('Foo:');
+        question.setFormId(456);
+        this.form.getQuestions().add(question);
+
+        var klass = this.form.getRecordModelClass();
+        var model = new klass();
+        model.setFoo('bar');
+        assert.equals(model.getFoo(), 'bar');
+      }
     }
   });
 });
