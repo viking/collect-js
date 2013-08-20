@@ -8,7 +8,18 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
   buster.testCase('InputView', {
     setUp: function() {
       this.klass = newSubclass({
-        template: '<div><input name="foo"/><input name="bar"/><input name="blargh" type="hidden" /><select name="baz"><option>qux</option><option>corge</option></select><textarea name="grault"></textarea><input class="submit" type="submit"/></div>'
+        template: '<div>' +
+            '<input name="foo"/>' +
+            '<input name="bar"/>' +
+            '<input name="blargh" type="hidden" />' +
+            '<select name="baz">' +
+              '<option>qux</option>' +
+              '<option>corge</option>' +
+            '</select>' +
+            '<textarea name="grault"></textarea>' +
+            '<input class="submit" type="submit" value="Go"/>' +
+            '<input class="button" type="button" value="Stop"/>' +
+          '</div>'
       });
       this.view = new this.klass();
     },
@@ -32,7 +43,7 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
       assert.equals(values.baz, null);
     },
 
-    "reset dialog": function() {
+    "reset": function() {
       var input = this.view.find('input');
       input.value = 'foo';
       var select = this.view.find('select');
@@ -44,6 +55,8 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
       assert.equals(input.value, '');
       assert.equals(select.selectedIndex, 0);
       assert.equals(textarea.value, '');
+      assert.equals(this.view.find('input.submit').value, "Go");
+      assert.equals(this.view.find('input.button').value, "Stop");
     },
 
     "display errors": function() {

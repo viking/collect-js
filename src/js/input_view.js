@@ -36,8 +36,11 @@ define([
       reset: function() {
         var inputs = this._findAllInputs();
         for (var i = 0; i < inputs.length; i++) {
-          inputs[i].value = '';
-          this._removeErrorClass(inputs[i]);
+          var type = inputs[i].getAttribute('type');
+          if (type != 'submit' && type != 'button') {
+            inputs[i].value = '';
+            this._removeErrorClass(inputs[i]);
+          }
         }
 
         var selects = this.findAll('select');
