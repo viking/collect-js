@@ -98,6 +98,13 @@ define([
         assert.equals(model.getId(), 1);
       },
 
+      "record_id attribute": function() {
+        var klass = this.form.getRecordModelClass();
+        var model = new klass();
+        model.setRecordId(1);
+        assert.equals(model.getRecordId(), 1);
+      },
+
       "question attribute": function() {
         var question = new QuestionModel();
         question.setName('foo');
@@ -110,7 +117,15 @@ define([
         var model = new klass();
         model.setFoo('bar');
         assert.equals(model.getFoo(), 'bar');
-      }
+      },
+
+      "requires record_id": function() {
+        var klass = this.form.getRecordModelClass();
+        var model = new klass();
+        refute(model.isValid());
+        model.setRecordId(1);
+        assert(model.isValid());
+      },
     }
   });
 });

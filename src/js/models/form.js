@@ -16,14 +16,19 @@ define([
       },
 
       getRecordModelClass: function() {
-        var attributeNames = ['id'];
+        var attributeNames = ['id', 'record_id'];
         this.getQuestions().forEach(function(question) {
           attributeNames.push(question.getName());
         });
 
         var namespace = {};
         Model.subclass(namespace, 'FormRecordModel', {
-          attributeNames: attributeNames
+          attributeNames: attributeNames,
+          properties: {
+            validate: function() {
+              this.validatesPresence('record_id');
+            }
+          }
         });
         return namespace.FormRecordModel;
       }
