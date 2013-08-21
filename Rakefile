@@ -157,7 +157,7 @@ namespace :templates do
   task :clean do
     templates = FileList["src/templates/**/*.html"].
       sub!(%r{(templates/.+?)\.html$}, 'js/\1.js')
-    invalid = FileList["src/js/templates/**/*.js"] - valid
+    invalid = FileList["src/js/templates/**/*.js"] - templates
     if !invalid.empty?
       FileUtils.rm(invalid, :verbose => true)
     end
