@@ -1,11 +1,15 @@
-require(['lib/maria', 'input_view'], function(maria, InputView) {
+define([
+  'lib/test',
+  'lib/maria',
+  'input_view'
+], function(test, maria, InputView) {
   function newSubclass(options) {
     var namespace = {};
     InputView.subclass(namespace, 'FooInputView', options);
     return namespace.FooInputView;
   }
 
-  buster.testCase('InputView', {
+  return new test.Suite('InputView', {
     setUp: function() {
       this.klass = newSubclass({
         template: '<div>' +
@@ -31,7 +35,7 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
       inputs[2].value = 'stuff';
       this.view.find('select').selectedIndex = 1;
       this.view.find('textarea').value = "stuff goes here";
-      assert.equals(this.view.getValues(), {
+      this.assertEquals(this.view.getValues(), {
         foo: 'foo', bar: 'bar', blargh: 'stuff', baz: 'corge',
         grault: 'stuff goes here'
       });
@@ -40,7 +44,7 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
     "get values with invalid selectedIndex": function() {
       this.view.find('select').selectedIndex = 5;
       var values = this.view.getValues();
-      assert.equals(values.baz, null);
+      this.assertEquals(values.baz, null);
     },
 
     "reset": function() {
@@ -52,12 +56,12 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
       textarea.value = 'junk';
 
       this.view.reset();
-      assert.equals(inputs[0].value, '');
-      assert.equals(inputs[2].value, 'foo');
-      assert.equals(select.selectedIndex, 0);
-      assert.equals(textarea.value, '');
-      assert.equals(this.view.find('input.submit').value, "Go");
-      assert.equals(this.view.find('input.button').value, "Stop");
+      this.assertEquals(inputs[0].value, '');
+      this.assertEquals(inputs[2].value, 'foo');
+      this.assertEquals(select.selectedIndex, 0);
+      this.assertEquals(textarea.value, '');
+      this.assertEquals(this.view.find('input.submit').value, "Go");
+      this.assertEquals(this.view.find('input.button').value, "Stop");
     },
 
     "save values for resets": function() {
@@ -65,28 +69,28 @@ require(['lib/maria', 'input_view'], function(maria, InputView) {
       input.value = 'foo';
       this.view.saveValues();
       this.view.reset();
-      assert.equals(input.value, 'foo');
+      this.assertEquals(input.value, 'foo');
     },
 
     "reset clears errors": function() {
       this.view.displayErrors({foo: ['error 1'], baz: ['error 2'], grault: ['error 3']});
       this.view.reset();
-      refute(this.view.find('.error'));
+      this.refute(this.view.find('.error'));
     },
 
     "display errors": function() {
       this.view.displayErrors({foo: ['error 1'], baz: ['error 2'], grault: ['error 3']});
-      assert.equals(this.view.find('input').getAttribute('class'), 'error');
-      assert.equals(this.view.find('select').getAttribute('class'), 'error');
-      assert.equals(this.view.find('textarea').getAttribute('class'), 'error');
+      this.assertEquals(this.view.find('input').getAttribute('class'), 'error');
+      this.assertEquals(this.view.find('select').getAttribute('class'), 'error');
+      this.assertEquals(this.view.find('textarea').getAttribute('class'), 'error');
     },
 
     "don't double add error class": function() {
       this.view.displayErrors({foo: ['error 1'], baz: ['error 2'], grault: ['error 3']});
       this.view.displayErrors({foo: ['error 1'], baz: ['error 2'], grault: ['error 3']});
-      assert.equals(this.view.find('input').getAttribute('class'), 'error');
-      assert.equals(this.view.find('select').getAttribute('class'), 'error');
-      assert.equals(this.view.find('textarea').getAttribute('class'), 'error');
+      this.assertEquals(this.view.find('input').getAttribute('class'), 'error');
+      this.assertEquals(this.view.find('select').getAttribute('class'), 'error');
+      this.assertEquals(this.view.find('textarea').getAttribute('class'), 'error');
     },
-  })
+  });
 });
