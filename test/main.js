@@ -18,6 +18,7 @@ require([
     'test/js/controllers/test_app',
     'test/js/controllers/admin/test_forms_input',
     'test/js/controllers/admin/test_projects_input',
+    'test/js/controllers/admin/test_questions_input',
   ], function() {
     for (var i = 0; i < arguments.length; i++) {
       runner.addSuite(arguments[i]);
