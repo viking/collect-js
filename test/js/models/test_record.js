@@ -1,23 +1,26 @@
-require(['models/record'], function(RecordModel) {
-  buster.testCase('RecordModel', {
+define([
+  'lib/test',
+  'models/record'
+], function(test, RecordModel) {
+  return new test.Suite('RecordModel', {
     setUp: function() {
       this.record = new RecordModel();
     },
 
     "id attribute": function() {
       this.record.setId(1);
-      assert.equals(this.record.getId(), 1);
+      this.assertEquals(this.record.getId(), 1);
     },
 
     "project_id attribute": function() {
       this.record.setProjectId(1);
-      assert.equals(this.record.getProjectId(), 1);
+      this.assertEquals(this.record.getProjectId(), 1);
     },
 
     "requires project id": function() {
-      refute(this.record.isValid());
+      this.refute(this.record.isValid());
       this.record.setProjectId(1);
-      assert(this.record.isValid());
+      this.assert(this.record.isValid());
     }
   });
 });

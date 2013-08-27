@@ -25,6 +25,7 @@ require([
     'test/js/models/test_projects',
     'test/js/models/test_question',
     'test/js/models/test_questions',
+    'test/js/models/test_record',
   ], function() {
     for (var i = 0; i < arguments.length; i++) {
       runner.addSuite(arguments[i]);
