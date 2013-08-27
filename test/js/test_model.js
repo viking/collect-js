@@ -1,34 +1,39 @@
-require(['lib/maria', 'model'], function(maria, Model) {
+define([
+  'lib/test',
+  'lib/sinon',
+  'lib/maria',
+  'model'
+], function(test, sinon, maria, Model) {
   function newSubclass(options) {
     var namespace = {};
     Model.subclass(namespace, 'FooModel', options);
     return namespace.FooModel;
   }
 
-  buster.testCase('Model', {
+  return new test.Suite('Model', {
     "setAttribute": function() {
       var klass = newSubclass();
       var model = new klass();
       model.setAttribute('foo', 123);
-      assert.equals(model.getAttributes(), {foo: 123})
-      assert.equals(model.getAttribute('foo'), 123)
+      this.assertEquals(model.getAttributes(), {foo: 123})
+      this.assertEquals(model.getAttribute('foo'), 123)
     },
 
     "setAttributes": function() {
       var klass = newSubclass();
       var model = new klass();
       model.setAttributes({foo: 123, bar: 'baz'});
-      assert.equals(model.getAttributes(), {foo: 123, bar: 'baz'})
+      this.assertEquals(model.getAttributes(), {foo: 123, bar: 'baz'})
     },
 
     "setAttribute triggers change event": function() {
       var klass = newSubclass();
       var model = new klass();
-      var spy = this.spy();
+      var spy = sinon.spy();
       maria.on(model, "change", spy);
 
       model.setAttribute("foo", 123);
-      assert.calledOnce(spy);
+      this.assert(spy.calledOnce);
     },
 
     "setAttribute doesn't trigger change event for same value": function() {
@@ -36,20 +41,20 @@ require(['lib/maria', 'model'], function(maria, Model) {
       var model = new klass();
       model.setAttribute("foo", 123);
 
-      var spy = this.spy();
+      var spy = sinon.spy();
       maria.on(model, "change", spy);
       model.setAttribute("foo", 123);
-      refute.called(spy);
+      this.refuteCalled(spy);
     },
 
     "setAttributes triggers change event once": function() {
       var klass = newSubclass();
       var model = new klass();
-      var spy = this.spy();
+      var spy = sinon.spy();
       maria.on(model, "change", spy);
 
       model.setAttributes({foo: 123, bar: 'baz'});
-      assert.calledOnce(spy);
+      this.assertCalled(spy, 1);
     },
 
     "setAttributes doesn't trigger change event for same value": function() {
@@ -57,35 +62,35 @@ require(['lib/maria', 'model'], function(maria, Model) {
       var model = new klass();
       model.setAttributes({foo: 123, bar: 'baz'});
 
-      var spy = this.spy();
+      var spy = sinon.spy();
       maria.on(model, "change", spy);
       model.setAttributes({foo: 123, bar: 'baz'});
-      refute.called(spy);
+      this.refuteCalled(spy);
     },
 
     "entityName": function() {
       var klass = newSubclass({
         entityName: 'foo'
       });
-      assert.equals(klass.entityName, "foo");
+      this.assertEquals(klass.entityName, "foo");
     },
 
     "collectionName": function() {
       var klass = newSubclass({
         collectionName: 'foos'
       });
-      assert.equals(klass.collectionName, "foos");
+      this.assertEquals(klass.collectionName, "foos");
     },
 
     "subclass with hasMany association": function() {
-      var setModel = this.spy();
+      var setModel = sinon.spy();
       var options = {
         associations: {
           bars: {type: 'hasMany', setModel: setModel}
         }
       };
       var klass = newSubclass(options);
-      assert.equals(klass.associations, options.associations);
+      this.assertEquals(klass.associations, options.associations);
 
       var foo = new klass();
       var bars = foo.getBars();
@@ -99,14 +104,14 @@ require(['lib/maria', 'model'], function(maria, Model) {
         }
       };
       var klass = newSubclass(options);
-      assert.equals(klass.associations, options.associations);
+      this.assertEquals(klass.associations, options.associations);
 
       var foo = new klass();
-      assert.equals(foo.getBar(), null);
+      this.assertEquals(foo.getBar(), null);
 
       var bar = new modelConstructor();
       foo.setBar(bar);
-      assert.same(foo.getBar(), bar);
+      this.assertSame(foo.getBar(), bar);
     },
 
     "hasOne association requires proper class": function() {
@@ -117,13 +122,13 @@ require(['lib/maria', 'model'], function(maria, Model) {
         }
       };
       var klass = newSubclass(options);
-      assert.equals(klass.associations, options.associations);
+      this.assertEquals(klass.associations, options.associations);
 
       var foo = new klass();
-      assert.equals(foo.getBar(), null);
+      this.assertEquals(foo.getBar(), null);
 
       var obj = new (function() {})();
-      assert.exception(function() {
+      this.assertException(function() {
         foo.setBar(obj);
       });
     },
@@ -133,7 +138,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
         attributeNames: ['id', 'name', 'project_id']
       });
       var model = new klass();
-      assert.equals(model.getAttributes(), {id: null, name: null, project_id: null});
+      this.assertEquals(model.getAttributes(), {id: null, name: null, project_id: null});
     },
 
     "set invalid attribute": function() {
@@ -141,7 +146,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
         attributeNames: ['id', 'name', 'project_id']
       });
       var model = new klass();
-      assert.exception(function() {
+      this.assertException(function() {
         model.setAttribute('foo', 123);
       });
     },
@@ -151,7 +156,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
         attributeNames: ['id', 'name', 'project_id']
       });
       var model = new klass();
-      assert.exception(function() {
+      this.assertException(function() {
         model.getAttribute('foo');
       });
     },
@@ -162,11 +167,11 @@ require(['lib/maria', 'model'], function(maria, Model) {
       });
       var model = new klass();
       model.setId(123);
-      assert.equals(model.getId(), 123);
+      this.assertEquals(model.getId(), 123);
       model.setName('foo');
-      assert.equals(model.getName(), 'foo');
+      this.assertEquals(model.getName(), 'foo');
       model.setProjectId(456);
-      assert.equals(model.getProjectId(), 456);
+      this.assertEquals(model.getProjectId(), 456);
     },
 
     "validate presence": function() {
@@ -179,12 +184,12 @@ require(['lib/maria', 'model'], function(maria, Model) {
         }
       });
       var model = new klass();
-      refute(model.isValid());
-      refute(result);
-      assert.equals(model.getErrors(), {foo: ['is required']});
+      this.refute(model.isValid());
+      this.refute(result);
+      this.assertEquals(model.getErrors(), {foo: ['is required']});
       model.setAttribute('foo', 123);
-      assert(model.isValid());
-      assert(result);
+      this.assert(model.isValid());
+      this.assert(result);
     },
 
     "validate presence rejects empty string": function() {
@@ -198,12 +203,12 @@ require(['lib/maria', 'model'], function(maria, Model) {
       });
       var model = new klass();
       model.setAttribute('foo', '');
-      refute(model.isValid());
-      refute(result);
-      assert.equals(model.getErrors(), {foo: ['is required']});
+      this.refute(model.isValid());
+      this.refute(result);
+      this.assertEquals(model.getErrors(), {foo: ['is required']});
       model.setAttribute('foo', 123);
-      assert(model.isValid());
-      assert(result);
+      this.assert(model.isValid());
+      this.assert(result);
     },
 
     "validate type": function() {
@@ -217,11 +222,11 @@ require(['lib/maria', 'model'], function(maria, Model) {
       });
       var model = new klass();
       model.setAttribute('foo', 'bar');
-      refute(model.isValid());
-      refute(result);
+      this.refute(model.isValid());
+      this.refute(result);
       model.setAttribute('foo', 123);
-      assert(model.isValid());
-      assert(result);
+      this.assert(model.isValid());
+      this.assert(result);
     },
 
     "dispatch validate event": function() {
@@ -231,7 +236,7 @@ require(['lib/maria', 'model'], function(maria, Model) {
         var m = evt.target;
         m.addError('foo');
       });
-      refute(model.isValid());
+      this.refute(model.isValid());
     },
 
     "validates unique": function() {
@@ -247,11 +252,11 @@ require(['lib/maria', 'model'], function(maria, Model) {
       maria.on(model_1, 'validate', function(evt) {
         result = evt.target.validatesUnique('foo', setModel);
       });
-      assert(model_1.isValid());
-      assert(result);
+      this.assert(model_1.isValid());
+      this.assert(result);
       model_1.setAttribute('foo', 'baz');
-      refute(model_1.isValid());
-      refute(result);
+      this.refute(model_1.isValid());
+      this.refute(result);
     },
 
     "validates format": function() {
@@ -265,17 +270,17 @@ require(['lib/maria', 'model'], function(maria, Model) {
       });
       var model = new klass();
       model.setAttribute('foo', 'bar baz');
-      refute(model.isValid());
-      refute(result);
+      this.refute(model.isValid());
+      this.refute(result);
       model.setAttribute('foo', 'bar');
-      assert(model.isValid());
-      assert(result);
+      this.assert(model.isValid());
+      this.assert(result);
       model.setAttribute('foo', null);
-      assert(model.isValid());
-      assert(result);
+      this.assert(model.isValid());
+      this.assert(result);
       model.setAttribute('foo', 123);
-      assert(model.isValid());
-      assert(result);
+      this.assert(model.isValid());
+      this.assert(result);
     }
   });
 });

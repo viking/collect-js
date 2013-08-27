@@ -1,3 +1,4 @@
+/* source: https://groups.google.com/forum/#!msg/phantomjs/OswbWiKrLYI/ndoXvK13OrIJ */
 // Script path provided when executing PhantomJS, should be relative to the working directory
 var relativeScriptPath = require('system').args[0];
 

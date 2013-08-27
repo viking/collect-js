@@ -14,9 +14,11 @@ require([
   require([
     'test/js/test_util',
     'test/js/test_input_view',
-  ], function(one, two) {
+    'test/js/test_model',
+  ], function(one, two, three) {
     runner.addSuite(one);
     runner.addSuite(two);
+    runner.addSuite(three);
     runner.run(function() {
       console.log("QUIT");
     });
