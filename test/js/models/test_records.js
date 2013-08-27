@@ -1,26 +1,28 @@
-require([
+define([
+  'lib/test',
+  'lib/sinon',
   'lib/maria',
   'model',
   'models/records',
   'models/record'
-], function(maria, Model, RecordsModel, RecordModel) {
-  buster.testCase('RecordsModel', {
-    'validates record id uniqueness': function() {
+], function(test, sinon, maria, Model, RecordsModel, RecordModel) {
+  return new test.Suite('RecordsModel', {
+    'validates record id uniqueness': sinon.test(function() {
       var record = new RecordModel();
       var records = new RecordsModel();
       records.add(record);
 
       this.stub(record, 'validatesUnique');
       record.isValid();
-      assert.calledWith(record.validatesUnique, 'id', records);
-    },
+      this.assertCalledWith(record.validatesUnique, 'id', records);
+    }),
 
     'validating invalid object': function() {
       var records = new RecordsModel();
       var model = new Model();
       maria.on(model, 'validate', records, 'onValidateRecord');
 
-      assert.exception(function() {
+      this.assertException(function() {
         model.isValid();
       });
     },
@@ -28,7 +30,7 @@ require([
     'adding invalid object': function() {
       var records = new RecordsModel();
       var model = new Model();
-      assert.exception(function() {
+      this.assertException(function() {
         records.add(model);
       });
     }
