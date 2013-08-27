@@ -1,35 +1,37 @@
-require([
+define([
+  'lib/test',
+  'lib/sinon',
   'lib/maria',
   'model',
   'models/projects',
   'models/project'
-], function(maria, Model, ProjectsModel, ProjectModel) {
-  buster.testCase('ProjectsModel', {
-    'validates project name uniqueness': function() {
+], function(test, sinon, maria, Model, ProjectsModel, ProjectModel) {
+  return new test.Suite('ProjectsModel', {
+    'validates project name uniqueness': sinon.test(function() {
       var project = new ProjectModel();
       var projects = new ProjectsModel();
       projects.add(project);
 
       this.stub(project, 'validatesUnique');
       project.isValid();
-      assert.calledWith(project.validatesUnique, 'name', projects);
-    },
+      this.assertCalledWith(project.validatesUnique, 'name', projects);
+    }),
 
-    'validates project id uniqueness': function() {
+    'validates project id uniqueness': sinon.test(function() {
       var project = new ProjectModel();
       var projects = new ProjectsModel();
       projects.add(project);
 
       this.stub(project, 'validatesUnique');
       project.isValid();
-      assert.calledWith(project.validatesUnique, 'id', projects);
-    },
+      this.assertCalledWith(project.validatesUnique, 'id', projects);
+    }),
 
     'validating invalid object': function() {
       var projects = new ProjectsModel();
       var model = new Model();
       maria.on(model, 'validate', projects, 'onValidateProject');
-      assert.exception(function() {
+      this.assertException(function() {
         model.isValid();
       });
     },
@@ -37,7 +39,7 @@ require([
     'adding invalid object': function() {
       var projects = new ProjectsModel();
       var model = new Model();
-      assert.exception(function() {
+      this.assertException(function() {
         projects.add(model);
       });
     }
