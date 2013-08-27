@@ -1,36 +1,38 @@
-require([
+define([
+  'lib/test',
+  'lib/sinon',
   'lib/maria',
   'model',
   'models/questions',
   'models/question'
-], function(maria, Model, QuestionsModel, QuestionModel) {
-  buster.testCase('QuestionsModel', {
-    'validates question name uniqueness': function() {
+], function(test, sinon, maria, Model, QuestionsModel, QuestionModel) {
+  return new test.Suite('QuestionsModel', {
+    'validates question name uniqueness': sinon.test(function() {
       var question = new QuestionModel();
       var questions = new QuestionsModel();
       questions.add(question);
 
       this.stub(question, 'validatesUnique');
       question.isValid();
-      assert.calledWith(question.validatesUnique, 'name', questions);
-    },
+      this.assertCalledWith(question.validatesUnique, 'name', questions);
+    }),
 
-    'validates question id uniqueness': function() {
+    'validates question id uniqueness': sinon.test(function() {
       var question = new QuestionModel();
       var questions = new QuestionsModel();
       questions.add(question);
 
       this.stub(question, 'validatesUnique');
       question.isValid();
-      assert.calledWith(question.validatesUnique, 'id', questions);
-    },
+      this.assertCalledWith(question.validatesUnique, 'id', questions);
+    }),
 
     'validating invalid object': function() {
       var questions = new QuestionsModel();
       var model = new Model();
       maria.on(model, 'validate', questions, 'onValidateQuestion');
 
-      assert.exception(function() {
+      this.assertException(function() {
         model.isValid();
       });
     },
@@ -38,7 +40,7 @@ require([
     'adding invalid object': function() {
       var questions = new QuestionsModel();
       var model = new Model();
-      assert.exception(function() {
+      this.assertException(function() {
         questions.add(model);
       });
     }
