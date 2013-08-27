@@ -20,6 +20,7 @@ require([
     'test/js/controllers/admin/test_projects_input',
     'test/js/controllers/admin/test_questions_input',
     'test/js/models/test_form',
+    'test/js/models/test_forms',
   ], function() {
     for (var i = 0; i < arguments.length; i++) {
       runner.addSuite(arguments[i]);

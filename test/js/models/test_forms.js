@@ -1,45 +1,47 @@
-require([
+define([
+  'lib/test',
+  'lib/sinon',
   'lib/maria',
   'model',
   'models/forms',
   'models/form'
-], function(maria, Model, FormsModel, FormModel) {
-  buster.testCase('FormsModel', {
-    'validates form name uniqueness': function() {
+], function(test, sinon, maria, Model, FormsModel, FormModel) {
+  return new test.Suite('FormsModel', {
+    'validates form name uniqueness': sinon.test(function() {
       var form = new FormModel();
       var forms = new FormsModel();
       forms.add(form);
 
       this.stub(form, 'validatesUnique');
       form.isValid();
-      assert.calledWith(form.validatesUnique, 'name', forms);
-    },
+      this.assertCalledWith(form.validatesUnique, 'name', forms);
+    }),
 
-    'validates form id uniqueness': function() {
+    'validates form id uniqueness': sinon.test(function() {
       var form = new FormModel();
       var forms = new FormsModel();
       forms.add(form);
 
       this.stub(form, 'validatesUnique');
       form.isValid();
-      assert.calledWith(form.validatesUnique, 'id', forms);
-    },
+      this.assertCalledWith(form.validatesUnique, 'id', forms);
+    }),
 
-    'validating invalid object': function() {
+    'validating invalid object': sinon.test(function() {
       var forms = new FormsModel();
       var model = new Model();
       maria.on(model, 'validate', forms, 'onValidateForm');
 
       this.stub(model, 'addError');
-      assert.exception(function() {
+      this.assertException(function() {
         model.isValid();
       });
-    },
+    }),
 
     'adding invalid object': function() {
       var forms = new FormsModel();
       var model = new Model();
-      assert.exception(function() {
+      this.assertException(function() {
         forms.add(model);
       });
     }
