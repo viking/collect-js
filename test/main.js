@@ -15,10 +15,11 @@ require([
     'test/js/test_util',
     'test/js/test_input_view',
     'test/js/test_model',
-  ], function(one, two, three) {
-    runner.addSuite(one);
-    runner.addSuite(two);
-    runner.addSuite(three);
+    'test/js/controllers/test_app'
+  ], function() {
+    for (var i = 0; i < arguments.length; i++) {
+      runner.addSuite(arguments[i]);
+    }
     runner.run(function() {
       console.log("QUIT");
     });
