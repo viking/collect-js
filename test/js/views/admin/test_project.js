@@ -1,5 +1,9 @@
-define(['models/project', 'views/admin/project'], function(ProjectModel, AdminProjectView) {
-  buster.testCase("AdminProjectView", {
+define([
+  'lib/test',
+  'models/project',
+  'views/admin/project'
+], function(test, ProjectModel, AdminProjectView) {
+  return new test.Suite("AdminProjectView", {
     setUp: function() {
       this.project = new ProjectModel();
       this.project.setName("foo");
@@ -8,14 +12,14 @@ define(['models/project', 'views/admin/project'], function(ProjectModel, AdminPr
 
     "inserts name": function() {
       var span = this.view.find('span.name');
-      assert.equals(span.innerHTML, "foo");
+      this.assertEquals(span.innerHTML, "foo");
     },
 
     "updates on change": function() {
       this.view.build();
       this.project.setName("bar");
       var span = this.view.find('span.name');
-      assert.equals(span.innerHTML, "bar");
+      this.assertEquals(span.innerHTML, "bar");
     }
   });
 });
