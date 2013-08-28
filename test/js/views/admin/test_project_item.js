@@ -1,5 +1,9 @@
-define(['models/project', 'views/admin/project_item'], function(ProjectModel, AdminProjectItemView) {
-  buster.testCase('AdminProjectItemView', {
+define([
+  'lib/test',
+  'models/project',
+  'views/admin/project_item'
+], function(test, ProjectModel, AdminProjectItemView) {
+  return new test.Suite('AdminProjectItemView', {
     setUp: function() {
       this.project = new ProjectModel();
       this.project.setId(1);
@@ -9,19 +13,19 @@ define(['models/project', 'views/admin/project_item'], function(ProjectModel, Ad
 
     "inserts name": function() {
       var a = this.view.find('a');
-      assert.equals(a.innerHTML, "foo");
+      this.assertEquals(a.innerHTML, "foo");
     },
 
     "inserts link": function() {
       var a = this.view.find('a');
-      assert.equals(a.getAttribute('href'), "/admin/projects/1");
+      this.assertEquals(a.getAttribute('href'), "/admin/projects/1");
     },
 
     "updates on change": function() {
       this.view.build();
       this.project.setName("bar");
       var a = this.view.find('a');
-      assert.equals(a.innerHTML, "bar");
+      this.assertEquals(a.innerHTML, "bar");
     },
   });
 });
