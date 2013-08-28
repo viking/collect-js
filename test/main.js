@@ -27,7 +27,8 @@ require([
     'test/models/test_questions',
     'test/models/test_record',
     'test/models/test_records',
-    'test/persistence/test_local'
+    'test/persistence/test_local',
+    'test/views/test_app'
   ], function() {
     for (var i = 0; i < arguments.length; i++) {
       runner.addSuite(arguments[i]);
