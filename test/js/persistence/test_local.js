@@ -1,11 +1,12 @@
 define([
+  'lib/test',
   'models/projects',
   'models/project',
   'models/forms',
   'models/form',
   'persistence/local'
-], function(ProjectsModel, ProjectModel, FormsModel, FormModel, LocalStore) {
-  buster.testCase('LocalStore', {
+], function(test, ProjectsModel, ProjectModel, FormsModel, FormModel, LocalStore) {
+  return new test.Suite('LocalStore', {
     setUp: function() {
       localStorage.clear();
       this.store = new LocalStore();
@@ -21,12 +22,12 @@ define([
 
       this.store.create('stuff', obj, {
         success: done(function(id) {
-          assert.equals(id, 1);
-          assert.equals(obj.data.id, 1);
-          assert.equals(JSON.parse(localStorage['stuff']), [{id:1,foo:"bar"}])
+          this.assertEquals(id, 1);
+          this.assertEquals(obj.data.id, 1);
+          this.assertEquals(JSON.parse(localStorage['stuff']), [{id:1,foo:"bar"}])
         }),
         failure: done(function(message) {
-          assert(false, message);
+          this.assert(false, message);
         })
       });
     },
@@ -41,7 +42,7 @@ define([
 
       this.store.create('stuff', obj, {
         failure: done(function(message) {
-          assert.equals(message, "record id is non-null");
+          this.assertEquals(message, "record id is non-null");
         })
       });
     },
@@ -57,7 +58,7 @@ define([
       this.store.create('stuff', obj, {
         success: function(id) {
           self.store.getCollection('stuff', done(function(data) {
-            assert.equals(data, [{id:1,foo:"bar"}])
+            this.assertEquals(data, [{id:1,foo:"bar"}])
           }))
         }
       });
@@ -77,7 +78,7 @@ define([
           obj.data.foo = "baz";
           self.store.update('stuff', obj, {
             success: done(function() {
-              assert.equals(
+              this.assertEquals(
                 JSON.parse(localStorage['stuff']),
                 [{id:1,foo:"baz"}]
               );
@@ -95,7 +96,7 @@ define([
 
       this.store.update('stuff', obj, {
         failure: done(function(message) {
-          assert.equals(message, "record not found");
+          this.assertEquals(message, "record not found");
         })
       });
     },
@@ -104,7 +105,7 @@ define([
       var setModel = new ProjectsModel();
       this.store.addSetModel('projects', setModel, {
         success: done(function(id) {
-          assert.equals(JSON.parse(localStorage['projects']), [{id:1,name:"foo"}])
+          this.assertEquals(JSON.parse(localStorage['projects']), [{id:1,name:"foo"}])
         })
       });
       var model = new ProjectModel();
@@ -123,8 +124,9 @@ define([
       model.setName('foo');
       setModel.add(model);
 
+      var self = this;
       setTimeout(function() {
-        assert.equals(localStorage['projects'], '[{"id":1,"name":"foo"}]');
+        self.assertEquals(localStorage['projects'], '[{"id":1,"name":"foo"}]');
         done();
       }, 100);
     },
@@ -134,7 +136,7 @@ define([
       localStorage['projects'] = '[{"id":1,"name":"foo"}]';
       this.store.findAll('projects', setModel, ProjectModel, {
         success: done(function() {
-          assert.equals(setModel.size, 1);
+          this.assertEquals(setModel.size, 1);
         })
       });
     },
@@ -142,10 +144,12 @@ define([
     "findAll camelizes attributes": function(done) {
       var setModel = new FormsModel();
       localStorage['forms'] = '[{"id":1,"name":"foo","project_id":1}]';
+
+      var self = this;
       this.store.findAll('forms', setModel, FormModel, {
         success: done(function() {
           setModel.forEach(function(model) {
-            assert.equals(model.getProjectId(), 1);
+            self.assertEquals(model.getProjectId(), 1);
           });
         })
       });
@@ -157,7 +161,7 @@ define([
       this.store.findAll('forms', setModel, FormModel, {
         filter: {project_id: 1},
         success: done(function() {
-          assert.equals(setModel.size, 2);
+          this.assertEquals(setModel.size, 2);
         })
       });
     },
@@ -166,8 +170,8 @@ define([
       localStorage['projects'] = '[{"id":1,"name":"foo"},{"id":2,"name":"bar"}]';
       this.store.find('projects', 1, ProjectModel, {
         success: done(function(model) {
-          assert.equals(model.getId(), 1);
-          assert.equals(model.getName(), 'foo');
+          this.assertEquals(model.getId(), 1);
+          this.assertEquals(model.getName(), 'foo');
         })
       });
     },
@@ -182,10 +186,10 @@ define([
 
       this.store.create('stuff', obj, {
         success: done(function(id) {
-          assert(false, "model should not have been created");
+          this.assert(false, "model should not have been created");
         }),
         failure: done(function(model) {
-          assert.same(model, obj);
+          this.assertSame(model, obj);
         })
       });
     },
@@ -199,10 +203,10 @@ define([
 
       this.store.update('stuff', obj, {
         success: done(function(id) {
-          assert(false, "model should not have been updated");
+          this.assert(false, "model should not have been updated");
         }),
         failure: done(function(model) {
-          assert.same(model, obj);
+          this.assertSame(model, obj);
         })
       });
     }
