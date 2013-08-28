@@ -1,5 +1,9 @@
-define(['models/form', 'views/admin/form_item'], function(FormModel, AdminFormItemView) {
-  buster.testCase('AdminFormItemView', {
+define([
+  'lib/test',
+  'models/form',
+  'views/admin/form_item'
+], function(test, FormModel, AdminFormItemView) {
+  return new test.Suite('AdminFormItemView', {
     setUp: function() {
       this.form = new FormModel();
       this.form.setId(1);
@@ -10,19 +14,19 @@ define(['models/form', 'views/admin/form_item'], function(FormModel, AdminFormIt
 
     "inserts name": function() {
       var a = this.view.find('a');
-      assert.equals(a.innerHTML, "foo");
+      this.assertEquals(a.innerHTML, "foo");
     },
 
     "inserts href": function() {
       var a = this.view.find('a');
-      assert.equals(a.getAttribute('href'), "/admin/forms/1");
+      this.assertEquals(a.getAttribute('href'), "/admin/forms/1");
     },
 
     "updates on change": function() {
       this.view.build();
       this.form.setName("bar");
       var a = this.view.find('a');
-      assert.equals(a.innerHTML, "bar");
+      this.assertEquals(a.innerHTML, "bar");
     },
   });
 });
