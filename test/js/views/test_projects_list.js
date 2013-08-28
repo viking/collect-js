@@ -1,5 +1,10 @@
-define(['models/project', 'models/projects', 'views/projects_list'], function(ProjectModel, ProjectsModel, ProjectsListView) {
-  buster.testCase('ProjectsListView', {
+define([
+  'lib/test',
+  'models/project',
+  'models/projects',
+  'views/projects_list'
+], function(test, ProjectModel, ProjectsModel, ProjectsListView) {
+  return new test.Suite('ProjectsListView', {
     setUp: function() {
       var project_1 = new ProjectModel();
       project_1.setName("foo");
@@ -15,7 +20,7 @@ define(['models/project', 'models/projects', 'views/projects_list'], function(Pr
 
     "creates child views": function() {
       var elts = this.view.findAll('li');
-      assert.equals(elts.length, 2);
+      this.assertEquals(elts.length, 2);
     }
   });
 });
