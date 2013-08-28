@@ -1,5 +1,10 @@
-define(['models/form', 'models/forms', 'views/admin/forms_list'], function(FormModel, FormsModel, AdminFormsListView) {
-  buster.testCase('AdminFormsListView', {
+define([
+  'lib/test',
+  'models/form',
+  'models/forms',
+  'views/admin/forms_list'
+], function(test, FormModel, FormsModel, AdminFormsListView) {
+  return new test.Suite('AdminFormsListView', {
     setUp: function() {
       var form_1 = new FormModel();
       form_1.setName("foo");
@@ -15,7 +20,7 @@ define(['models/form', 'models/forms', 'views/admin/forms_list'], function(FormM
 
     "creates child views": function() {
       var elts = this.view.findAll('li');
-      assert.equals(elts.length, 2);
+      this.assertEquals(elts.length, 2);
     }
   });
 });

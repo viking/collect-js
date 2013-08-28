@@ -37,6 +37,7 @@ require([
     'test/views/admin/test_form_item',
     'test/views/admin/test_forms',
     'test/views/admin/test_forms_input',
+    'test/views/admin/test_forms_list',
   ], function() {
     for (var i = 0; i < arguments.length; i++) {
       runner.addSuite(arguments[i]);
