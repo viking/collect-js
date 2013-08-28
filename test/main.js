@@ -31,6 +31,7 @@ require([
     'test/views/test_app',
     'test/views/test_project',
     'test/views/test_project_item',
+    'test/views/test_projects',
   ], function() {
     for (var i = 0; i < arguments.length; i++) {
       runner.addSuite(arguments[i]);
