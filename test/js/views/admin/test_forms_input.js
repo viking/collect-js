@@ -1,5 +1,9 @@
-define(['models/forms', 'views/admin/forms_input'], function(FormsModel, AdminFormsInputView) {
-  buster.testCase('AdminFormsInputView', {
+define([
+  'lib/test',
+  'models/forms',
+  'views/admin/forms_input'
+], function(test, FormsModel, AdminFormsInputView) {
+  return new test.Suite('AdminFormsInputView', {
     setUp: function() {
       this.forms = new FormsModel();
       this.view = new AdminFormsInputView(this.forms);
@@ -8,7 +12,7 @@ define(['models/forms', 'views/admin/forms_input'], function(FormsModel, AdminFo
     "get values": function() {
       this.view.setProjectId(123);
       this.view.find('input.name').value = 'foo';
-      assert.equals(this.view.getValues(), {name:'foo',project_id:123});
+      this.assertEquals(this.view.getValues(), { name: 'foo', project_id: "123" }); // XXX: should this be a string?
     },
 
     "reset dialog": function() {
@@ -16,7 +20,7 @@ define(['models/forms', 'views/admin/forms_input'], function(FormsModel, AdminFo
       input.value = 'foo';
 
       this.view.reset();
-      assert.equals(input.value, '');
+      this.assertEquals(input.value, '');
     }
   });
 });
