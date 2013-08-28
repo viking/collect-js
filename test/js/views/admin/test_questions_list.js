@@ -1,9 +1,10 @@
 define([
+  'lib/test',
   'models/question',
   'models/questions',
   'views/admin/questions_list'
-], function(QuestionModel, QuestionsModel, AdminQuestionsListView) {
-  buster.testCase('AdminQuestionsListView', {
+], function(test, QuestionModel, QuestionsModel, AdminQuestionsListView) {
+  return new test.Suite('AdminQuestionsListView', {
     setUp: function() {
       var question_1 = new QuestionModel();
       question_1.setName("foo");
@@ -19,7 +20,7 @@ define([
 
     "creates child views": function() {
       var elts = this.view.findAll('li');
-      assert.equals(elts.length, 2);
+      this.assertEquals(elts.length, 2);
     }
   });
 });
