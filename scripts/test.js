@@ -1,3 +1,5 @@
+#!/usr/bin/env phantomjs
+
 /* source: https://groups.google.com/forum/#!msg/phantomjs/OswbWiKrLYI/ndoXvK13OrIJ */
 // Script path provided when executing PhantomJS, should be relative to the working directory
 var relativeScriptPath = require('system').args[0];
@@ -26,7 +28,7 @@ page.onError = function(msg, trace) {
   console.error(msgStack.join('\n'));
   phantom.exit();
 };
-page.open('file://' + absoluteScriptDir + '/test.html', function(status) {
+page.open('file://' + absoluteScriptDir + '/../test/test.html', function(status) {
   if (status == 'fail') {
     console.error("failed to load the test page!");
     phantom.exit();
