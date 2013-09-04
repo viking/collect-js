@@ -9,8 +9,15 @@ require.config({
 require([
   'lib/test'
 ], function(test) {
-  var logger = new test.ConsoleLogger(console);
+  var logger;
+  if (navigator.userAgent.match(/PhantomJS/)) {
+    logger = new test.ConsoleLogger(console);
+  }
+  else {
+    logger = new test.HtmlLogger(document);
+  }
   var runner = new test.Runner(logger);
+
   require([
     'test/test_util',
     'test/test_input_view',
